@@ -2,7 +2,7 @@ const sjs = require('syscoinjs-lib')
 const BN = require('bn.js')
 const mnemonic = 'club toss element melody skin ship rifle student reason real interest insane elevator beauty movie'
 // blockbook URL
-const backendURL = 'localhost:9130'
+const backendURL = 'http://localhost:9130'
 // 'null' for no password encryption for local storage and 'true' for testnet
 const HDSigner = new sjs.utils.HDSigner(mnemonic, null, true)
 const syscoinjs = new sjs.SyscoinJSLib(HDSigner, backendURL)
