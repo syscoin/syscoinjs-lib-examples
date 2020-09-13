@@ -16,6 +16,7 @@ async function newAsset () {
   const psbt = await syscoinjs.assetNew(assetOpts, txOpts, sysChangeAddress, feeRate)
   if(!psbt) {
     console.log('Could not create transaction, not enough funds?')
+    return
   }
   // example of once you have it signed you can push it to network via backend provider
   const resSend = await sjs.utils.sendRawTransaction(syscoinjs.blockbookURL, psbt.extractTransaction().toHex())
