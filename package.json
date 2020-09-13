@@ -1,0 +1,46 @@
+{
+  "name": "syscoinjs-lib-examples",
+  "version": "1.0.0",
+  "description": "Examples of a transaction creation library interfacing with coin selection for Syscoin.",
+  "keywords": [
+    "coinselect",
+    "coin",
+    "unspents",
+    "wallet",
+    "BIP32",
+    "management",
+    "utxo",
+    "transaction",
+    "fee",
+    "optimization",
+    "optimizing",
+    "bitcoin",
+    "syscoin",
+    "syscoinjs"
+  ],
+  "homepage": "https://github.com/syscoin/syscoinjs-lib-examples",
+  "bugs": {
+    "url": "https://github.com/syscoin/syscoinjs-lib-examples/issues"
+  },
+  "license": "MIT",
+  "author": "Jagdeep Sidhu",
+  "files": [
+    "index.js"
+  ],
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/syscoin/syscoinjs-lib-examples.git"
+  },
+  "scripts": {
+    "standard": "standard"
+  },
+  "devDependencies": {
+    "nyc": "^8.3.2",
+    "standard": "*"
+  },
+  "dependencies": {
+    "bn.js": "^5.1.2",
+    "syscoinjs-lib": "^1.0.1"
+  }
+}
