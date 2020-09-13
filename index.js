@@ -14,6 +14,9 @@ async function newAsset () {
   // let HDSigner find change address
   const sysChangeAddress = null
   const psbt = await syscoinjs.assetNew(assetOpts, txOpts, sysChangeAddress, feeRate)
+  if(!psbt) {
+    console.log('Could not create transaction, not enough funds?')
+  }
   // example of once you have it signed you can push it to network via backend provider
   const resSend = await sjs.utils.sendRawTransaction(syscoinjs.blockbookURL, psbt.extractTransaction().toHex())
   if (resSend.error) {
