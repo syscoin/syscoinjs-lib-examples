@@ -19,7 +19,7 @@ async function newAsset () {
     return
   }
   // example of once you have it signed you can push it to network via backend provider
-  const resSend = await sjs.utils.sendRawTransaction(syscoinjs.blockbookURL, psbt.extractTransaction().toHex())
+  const resSend = await sjs.utils.sendRawTransaction(syscoinjs.blockbookURL, psbt.extractTransaction().toHex(), HDSigner)
   if (resSend.error) {
     console.log('could not send tx! error: ' + resSend.error.message)
   } else if (resSend.result) {
