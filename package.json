@@ -41,6 +41,6 @@
   },
   "dependencies": {
     "bn.js": "^5.1.2",
-    "syscoinjs-lib": "^1.0.11"
+    "syscoinjs-lib": "^1.0.12"
   }
 }
