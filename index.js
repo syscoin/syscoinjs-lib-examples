@@ -6,7 +6,6 @@ const backendURL = 'http://localhost:9130'
 // 'null' for no password encryption for local storage and 'true' for testnet
 const HDSigner = new sjs.utils.HDSigner(mnemonic, null, true)
 const syscoinjs = new sjs.SyscoinJSLib(HDSigner, backendURL)
-console.log('account xpub ' + HDSigner.getAccountXpub())
 async function newAsset () {
   const feeRate = new BN(10)
   const txOpts = { rbf: false }
