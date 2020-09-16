@@ -35,8 +35,7 @@ async function updateAsset () {
   const assetGuid = 2529870008
   const assetMap = new Map([
     [2529870008, { outputs: [{ value: new BN(0), address: 'tsys1qt8aq6hrrlc6ueps4wqc6ynfckrxxrw20ydamc9' }] }]
-  ]),
-
+  ])
   const assetOpts =  { updatecapabilityflags: 127, balance: new BN(42000000), contract: Buffer.from('2b1e58b979e4b2d72d8bca5bb4646ccc032ddbfc', 'hex'), description: 'new publicvalue' }
   // let HDSigner find change address
   const sysChangeAddress = null
