@@ -60,6 +60,7 @@ async function issueAsset () {
   const txOpts = { rbf: true }
   const assetGuid = 3372068234
   // note no destination address in first output as syscoinjslib will auto fill it with new change address for 0 value asset outputs
+  // mint 1000 satoshi (not COINS)
   const assetMap = new Map([
     [assetGuid, { outputs: [{ value: new BN(1000), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
   ])
@@ -80,4 +81,32 @@ async function issueAsset () {
     console.log('Unrecognized response from backend')
   }
 }
-issueAsset()
+
+async function sendAsset () {
+  const feeRate = new BN(10)
+  const txOpts = { rbf: true }
+  const assetGuid = 3372068234
+  // note no destination address in first output as syscoinjslib will auto fill it with new change address for 0 value asset outputs
+  // send 10 satoshi (not COINS)
+  const assetMap = new Map([
+    [assetGuid, { outputs: [{ value: new BN(10), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
+  ])
+  // let HDSigner find change address
+  const sysChangeAddress = null
+  const psbt = await syscoinjs.assetAllocationSend(txOpts, assetMap, sysChangeAddress, feeRate)
+  if(!psbt) {
+    console.log('Could not create transaction, not enough funds?')
+    return
+  }
+  // example of once you have it signed you can push it to network via backend provider
+  const resSend = await sjs.utils.sendRawTransaction(syscoinjs.blockbookURL, psbt.extractTransaction().toHex(), HDSigner)
+  if (resSend.error) {
+    console.log('could not send tx! error: ' + resSend.error.message)
+  } else if (resSend.result) {
+    console.log('tx successfully sent! txid: ' + resSend.result)
+  } else {
+    console.log('Unrecognized response from backend')
+  }
+}
+
+sendAsset()
