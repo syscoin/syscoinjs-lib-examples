@@ -140,4 +140,33 @@ async function assetBurnToSys () {
   }
 }
 
-assetBurnToSys()
+async function assetBurnToEth () {
+  const feeRate = new BN(10)
+  const txOpts = { rbf: true }
+  const assetOpts = { ethaddress: Buffer.from('9667de58c15475626165eaa4c9970e409e1181d0', 'hex') }
+  // in reality this would be a known asset (SYSX)
+  const assetGuid = 3372068234
+  // note no destination address in first output as syscoinjslib will auto fill it with new change address for 0 value asset outputs
+  // burn 1 satoshi (not COINS)
+  const assetMap = new Map([
+    [assetGuid, { outputs: [{ value: new BN(1), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
+  ])
+  // let HDSigner find change address
+  const sysChangeAddress = null
+  const psbt = await syscoinjs.assetAllocationBurn(assetOpts, txOpts, assetMap, sysChangeAddress, feeRate)
+  if(!psbt) {
+    console.log('Could not create transaction, not enough funds?')
+    return
+  }
+  // example of once you have it signed you can push it to network via backend provider
+  const resSend = await sjs.utils.sendRawTransaction(syscoinjs.blockbookURL, psbt.extractTransaction().toHex(), HDSigner)
+  if (resSend.error) {
+    console.log('could not send tx! error: ' + resSend.error.message)
+  } else if (resSend.result) {
+    console.log('tx successfully sent! txid: ' + resSend.result)
+  } else {
+    console.log('Unrecognized response from backend')
+  }
+}
+
+assetBurnToEth()
