@@ -187,7 +187,7 @@ async function assetMintToSys () {
   const mintAddress = 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae'
   const assetGuid = 2615707979
   // mint 1 satoshi (not COINS)
-  const amountToMint = new BN(100)
+  const amountToMint = new BN(10000000000)
   
   // note no destination address in first output as syscoinjslib will auto fill it with new change address for 0 value asset outputs
   const assetMap = new Map([
