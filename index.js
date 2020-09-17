@@ -61,7 +61,7 @@ async function issueAsset () {
   const assetGuid = 3372068234
   // note no destination address in first output as syscoinjslib will auto fill it with new change address for 0 value asset outputs
   const assetMap = new Map([
-    [assetGuid, { outputs: [{ value: new BN(1000), address: 'tsys1qp7qn0t0t6ymwhdwne9uku7v3dhw07a7tra8hzl' }] }]
+    [assetGuid, { outputs: [{ value: new BN(1000), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
   ])
   // let HDSigner find change address
   const sysChangeAddress = null
@@ -80,4 +80,4 @@ async function issueAsset () {
     console.log('Unrecognized response from backend')
   }
 }
-updateAsset()
+issueAsset()
