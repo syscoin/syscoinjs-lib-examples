@@ -214,9 +214,9 @@ async function sysBurnToAsset () {
   const txOpts = { rbf: true } 
   // asset and address being minted to from Eth to Sys
   const mintAddress = 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae'
-  const assetGuid = 2615707979
-  // mint 100 COINS
-  const amountToMint = new BN(10000000000)
+  const assetGuid = 3372068234
+  // mint 10 COINS
+  const amountToMint = new BN(1000000000)
   
   // note no destination address in first output as syscoinjslib will auto fill it with new change address for 0 value asset outputs
   const assetMap = new Map([
