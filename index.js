@@ -13,7 +13,7 @@ async function newAsset () {
   const assetOpts = { precision: 8, symbol: 'CAT', updatecapabilityflags: 255, balance: new BN(10000000000), maxsupply: new BN(100000000000), description: 'publicvalue' }
   // let HDSigner find change address
   const sysChangeAddress = null
-  // let HDSigner find asset destnation address
+  // let HDSigner find asset destination address
   const sysReceivingAddress = null
   const psbt = await syscoinjs.assetNew(assetOpts, txOpts, sysChangeAddress, sysReceivingAddress, feeRate)
   if(!psbt) {
@@ -184,7 +184,7 @@ async function assetMintToSys () {
   // asset and address being minted to from Eth to Sys
   const mintAddress = 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae'
   const assetGuid = 2615707979
-  // mint 1 satoshi (not COINS)
+  // mint 100 COINS
   const amountToMint = new BN(10000000000)
   
   // note no destination address in first output as syscoinjslib will auto fill it with new change address for 0 value asset outputs
