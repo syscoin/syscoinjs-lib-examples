@@ -10,7 +10,7 @@ const syscoinjs = new sjs.SyscoinJSLib(HDSigner, backendURL)
 async function newAsset () {
   const feeRate = new BN(10)
   const txOpts = { rbf: false }
-  const assetOpts = { precision: 8, symbol: 'CAT', updatecapabilityflags: 255, balance: new BN(10000000000), maxsupply: new BN(100000000000), description: 'publicvalue' }
+  const assetOpts = { precision: 8, symbol: 'CAT', updatecapabilityflags: 255, maxsupply: new BN(100000000000), description: 'publicvalue' }
   // let HDSigner find change address
   const sysChangeAddress = null
   // let HDSigner find asset destination address
@@ -35,8 +35,8 @@ async function updateAsset () {
   const feeRate = new BN(10)
   const txOpts = { rbf: true }
   const assetGuid = 3372068234
-  // mint 42000000 satoshi for asset, update capability flags, update description and update eth smart contract address
-  const assetOpts =  { updatecapabilityflags: 127, balance: new BN(42000000), contract: Buffer.from('2b1e58b979e4b2d72d8bca5bb4646ccc032ddbfc', 'hex'), description: 'new publicvalue' }
+  // update capability flags, update description and update eth smart contract address
+  const assetOpts =  { updatecapabilityflags: 127, contract: Buffer.from('2b1e58b979e4b2d72d8bca5bb4646ccc032ddbfc', 'hex'), description: 'new publicvalue' }
   // let HDSigner find change address
   const sysChangeAddress = null
   const psbt = await syscoinjs.assetUpdate(assetGuid, assetOpts, txOpts, sysChangeAddress, feeRate)
