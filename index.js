@@ -7,6 +7,30 @@ const backendURL = 'http://localhost:9130'
 const HDSigner = new sjs.utils.HDSigner(mnemonic, null, true)
 const syscoinjs = new sjs.SyscoinJSLib(HDSigner, backendURL)
 
+async function sendSys () {
+  const feeRate = new BN(10)
+  const txOpts = { rbf: false }
+  // let HDSigner find change address
+  const sysChangeAddress = null
+  const outputsArr = [
+    { address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae', value: new BN(100000000) }
+  ]
+  const psbt = await syscoinjs.createTransaction(txOpts, sysChangeAddress, outputsArr, feeRate)
+  if(!psbt) {
+    console.log('Could not create transaction, not enough funds?')
+    return
+  }
+  // example of once you have it signed you can push it to network via backend provider
+  const resSend = await sjs.utils.sendRawTransaction(syscoinjs.blockbookURL, psbt.extractTransaction().toHex(), HDSigner)
+  if (resSend.error) {
+    console.log('could not send tx! error: ' + resSend.error.message)
+  } else if (resSend.result) {
+    console.log('tx successfully sent! txid: ' + resSend.result)
+  } else {
+    console.log('Unrecognized response from backend')
+  }
+}
+
 async function newAsset () {
   const feeRate = new BN(10)
   const txOpts = { rbf: false }
