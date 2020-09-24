@@ -140,6 +140,37 @@ async function assetBurnToSys () {
   }
 }
 
+async function sysBurnToAsset () {
+  const feeRate = new BN(10)
+  const txOpts = { rbf: true } 
+  // asset and address being minted to from Eth to Sys
+  const mintAddress = 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae'
+  const assetGuid = 3372068234
+  // mint 10 COINS
+  const amountToMint = new BN(1000000000)
+  
+  // note no destination address in first output as syscoinjslib will auto fill it with new change address for 0 value asset outputs
+  const assetMap = new Map([
+    [assetGuid, { outputs: [{ value: amountToMint, address: mintAddress }] }]
+  ])
+  // let HDSigner find change address
+  const sysChangeAddress = null
+  const psbt = await syscoinjs.syscoinBurnToAssetAllocation(txOpts, assetMap, sysChangeAddress, amountToMint, feeRate)
+  if(!psbt) {
+    console.log('Could not create transaction, not enough funds?')
+    return
+  }
+  // example of once you have it signed you can push it to network via backend provider
+  const resSend = await sjs.utils.sendRawTransaction(syscoinjs.blockbookURL, psbt.extractTransaction().toHex(), HDSigner)
+  if (resSend.error) {
+    console.log('could not send tx! error: ' + resSend.error.message)
+  } else if (resSend.result) {
+    console.log('tx successfully sent! txid: ' + resSend.result)
+  } else {
+    console.log('Unrecognized response from backend')
+  }
+}
+
 async function assetBurnToEth () {
   const feeRate = new BN(10)
   const txOpts = { rbf: true }
@@ -194,37 +225,6 @@ async function assetMintToSys () {
   // let HDSigner find change address
   const sysChangeAddress = null
   const psbt = await syscoinjs.assetAllocationMint(assetOpts, txOpts, assetMap, sysChangeAddress, feeRate)
-  if(!psbt) {
-    console.log('Could not create transaction, not enough funds?')
-    return
-  }
-  // example of once you have it signed you can push it to network via backend provider
-  const resSend = await sjs.utils.sendRawTransaction(syscoinjs.blockbookURL, psbt.extractTransaction().toHex(), HDSigner)
-  if (resSend.error) {
-    console.log('could not send tx! error: ' + resSend.error.message)
-  } else if (resSend.result) {
-    console.log('tx successfully sent! txid: ' + resSend.result)
-  } else {
-    console.log('Unrecognized response from backend')
-  }
-}
-
-async function sysBurnToAsset () {
-  const feeRate = new BN(10)
-  const txOpts = { rbf: true } 
-  // asset and address being minted to from Eth to Sys
-  const mintAddress = 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae'
-  const assetGuid = 3372068234
-  // mint 10 COINS
-  const amountToMint = new BN(1000000000)
-  
-  // note no destination address in first output as syscoinjslib will auto fill it with new change address for 0 value asset outputs
-  const assetMap = new Map([
-    [assetGuid, { outputs: [{ value: amountToMint, address: mintAddress }] }]
-  ])
-  // let HDSigner find change address
-  const sysChangeAddress = null
-  const psbt = await syscoinjs.syscoinBurnToAssetAllocation(txOpts, assetMap, sysChangeAddress, amountToMint, feeRate)
   if(!psbt) {
     console.log('Could not create transaction, not enough funds?')
     return
