@@ -268,9 +268,9 @@ async function assetMintToSys () {
 async function assetMintToSys2 () {
   const feeRate = new BN(10)
   const txOpts = { rbf: true } 
-  // infura public id and ethereum burn txid
+  // infura URL + ID and ethereum burn txid
   const assetOpts = { 
-    infuraid: '<YOUR INFURA ID>',
+    infuraurl: '<YOUR INFURA URL>',
     ethtxid: '0x3c3bfe141fcbe313f2afd31be1b63dd3a0147235161e637407fbb8605d3d294f'
   }
   // will be auto filled based on ethtxid eth-proof
