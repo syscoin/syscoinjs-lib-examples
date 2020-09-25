@@ -227,47 +227,6 @@ async function assetBurnToEth () {
 async function assetMintToSys () {
   const feeRate = new BN(10)
   const txOpts = { rbf: true } 
-  /*
-  const GetProof = require('eth-proof');
-  this is how to use eth-proof to get the proof based on an Ethereum TxID
-  const buildEthProof = new GetProof('https://mainnet.infura.io/v3/<APP ID>');
-  try{
-      let result = await buildEthProof.transactionProof(ethTXID);
-      let txvalue = rlp.encode(rlp.decode(result.txProof[2][1])).toString('hex');
-      let txparentnodes = rlp.encode(result.txProof).toString('hex');
-      let txpath = rlp.encode(result.txIndex).toString('hex');
-      let blockNumber = parseInt(result.header[8].toString('hex'), 16);
-
-      result = await buildEthProof.receiptProof(ethTXID);
-      let receiptvalue = rlp.encode(rlp.decode(result.receiptProof[2][1])).toString('hex');
-      let receiptparentnodes =  rlp.encode(result.receiptProof).toString('hex');
-      let tokenFreezeFunction = '0x9c6dea23fe3b510bb5d170df49dc74e387692eaa3258c691918cd3aa94f5fb74' // token freeze function signature
-      let ERC20Manager = '0xFF957eA28b537b34E0c6E6B50c6c938668DD28a0' // mainnet erc20 manager
-      let bridgeTransferId = 0
-      let txReceipt = await web3.eth.getTransactionReceipt(ethTXID);
-      for(var i =0;i<txReceipt.logs.length;i++){
-          if(txReceipt.logs[i].topics && txReceipt.logs[i].topics.length !== 1){
-            continue;
-          }
-          // event TokenFreeze(address freezer, uint value, uint transferIdAndPrecisions);
-          if(txReceipt.logs[i].topics[0] === tokenFreezeFunction && txReceipt.logs[i].address === ERC20Manager){
-            let paramResults = web3.eth.abi.decodeParameters([{
-              type: 'address',
-              name: 'freezer'
-            },{
-                type: 'uint256',
-                name: 'value'
-            },{
-              type: 'uint',
-              name: 'transferIdAndPrecisions'
-            }], txReceipt.logs[i].data);
-            bridgeTransferId = paramResults.transferIdAndPrecisions & 0xFFFFFFFF;
-            break;
-          }
-        }
-  } catch(e){      
-    console.log('error getting Eth Proof: ', e)
-  }*/
   const assetOpts = { 
     bridgetransferid: 2,
     blocknumber: 6816449,
@@ -287,6 +246,35 @@ async function assetMintToSys () {
   const assetMap = new Map([
     [assetGuid, { outputs: [{ value: amountToMint, address: mintAddress }] }]
   ])
+  // let HDSigner find change address
+  const sysChangeAddress = null
+  const psbt = await syscoinjs.assetAllocationMint(assetOpts, txOpts, assetMap, sysChangeAddress, feeRate)
+  if(!psbt) {
+    console.log('Could not create transaction, not enough funds?')
+    return
+  }
+  // example of once you have it signed you can push it to network via backend provider
+  const resSend = await sjs.utils.sendRawTransaction(syscoinjs.blockbookURL, psbt.extractTransaction().toHex(), HDSigner)
+  if (resSend.error) {
+    console.log('could not send tx! error: ' + resSend.error.message)
+  } else if (resSend.result) {
+    console.log('tx successfully sent! txid: ' + resSend.result)
+  } else {
+    console.log('Unrecognized response from backend')
+  }
+}
+
+// pass just Eth txid and let syscoinjslib get proof to create transaction
+async function assetMintToSys2 () {
+  const feeRate = new BN(10)
+  const txOpts = { rbf: true } 
+  // infura public id and ethereum burn txid
+  const assetOpts = { 
+    infuraid: 'b168da11b4da49b0aee04717e7904a06',
+    ethtxid: '0x3c3bfe141fcbe313f2afd31be1b63dd3a0147235161e637407fbb8605d3d294f'
+  }
+  // will be auto filled based on ethtxid eth-proof
+  const assetMap = null
   // let HDSigner find change address
   const sysChangeAddress = null
   const psbt = await syscoinjs.assetAllocationMint(assetOpts, txOpts, assetMap, sysChangeAddress, feeRate)
