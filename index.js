@@ -270,7 +270,7 @@ async function assetMintToSys2 () {
   const txOpts = { rbf: true } 
   // infura public id and ethereum burn txid
   const assetOpts = { 
-    infuraid: 'b168da11b4da49b0aee04717e7904a06',
+    infuraid: '<YOUR INFURA ID>',
     ethtxid: '0x3c3bfe141fcbe313f2afd31be1b63dd3a0147235161e637407fbb8605d3d294f'
   }
   // will be auto filled based on ethtxid eth-proof
