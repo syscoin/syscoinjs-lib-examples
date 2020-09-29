@@ -83,7 +83,6 @@ async function issueAsset () {
   const feeRate = new BN(10)
   const txOpts = { rbf: true }
   const assetGuid = 3372068234
-  // note no destination address in first output as syscoinjslib will auto fill it with new change address for 0 value asset outputs
   // mint 1000 satoshi (not COINS)
   const assetMap = new Map([
     [assetGuid, { outputs: [{ value: new BN(1000), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
@@ -111,7 +110,6 @@ async function sendAsset () {
   // set to false for ZDAG, true disables it but it is replaceable by bumping the fee
   const txOpts = { rbf: true }
   const assetGuid = 3372068234
-  // note no destination address in first output as syscoinjslib will auto fill it with new change address for 0 value asset outputs
   // send 10 satoshi (not COINS)
   const assetMap = new Map([
     [assetGuid, { outputs: [{ value: new BN(10), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
@@ -141,7 +139,6 @@ async function assetBurnToSys () {
   const assetOpts = { ethaddress: Buffer.from('') }
   // in reality this would be a known asset (SYSX)
   const assetGuid = 3372068234
-  // note no destination address in first output as syscoinjslib will auto fill it with new change address for 0 value asset outputs
   // burn 1 satoshi (not COINS)
   const assetMap = new Map([
     [assetGuid, { outputs: [{ value: new BN(1), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
@@ -172,14 +169,12 @@ async function sysBurnToAsset () {
   const assetGuid = 3372068234
   // mint 10 COINS
   const amountToMint = new BN(1000000000)
-  
-  // note no destination address in first output as syscoinjslib will auto fill it with new change address for 0 value asset outputs
   const assetMap = new Map([
     [assetGuid, { outputs: [{ value: amountToMint, address: mintAddress }] }]
   ])
   // let HDSigner find change address
   const sysChangeAddress = null
-  const psbt = await syscoinjs.syscoinBurnToAssetAllocation(txOpts, assetMap, sysChangeAddress, amountToMint, feeRate)
+  const psbt = await syscoinjs.syscoinBurnToAssetAllocation(txOpts, assetMap, sysChangeAddress, feeRate)
   if(!psbt) {
     console.log('Could not create transaction, not enough funds?')
     return
@@ -201,7 +196,6 @@ async function assetBurnToEth () {
   const assetOpts = { ethaddress: Buffer.from('9667de58c15475626165eaa4c9970e409e1181d0', 'hex') }
   // in reality this would be a known asset (SYSX)
   const assetGuid = 3372068234
-  // note no destination address in first output as syscoinjslib will auto fill it with new change address for 0 value asset outputs
   // burn 1 satoshi (not COINS)
   const assetMap = new Map([
     [assetGuid, { outputs: [{ value: new BN(1), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
@@ -243,8 +237,6 @@ async function assetMintToSys () {
   const assetGuid = 2615707979
   // mint 100 COINS
   const amountToMint = new BN(10000000000)
-  
-  // note no destination address in first output as syscoinjslib will auto fill it with new change address for 0 value asset outputs
   const assetMap = new Map([
     [assetGuid, { outputs: [{ value: amountToMint, address: mintAddress }] }]
   ])
