@@ -7,12 +7,12 @@ const HDSigner = new sjs.utils.HDSigner(mnemonic, null, true)
 const syscoinjs = new sjs.SyscoinJSLib(HDSigner, backendURL)
 
 async function sendSys () {
-  const feeRate = new syscoinjs.utils.BN(10)
+  const feeRate = new sjs.utils.BN(10)
   const txOpts = { rbf: false }
   // let HDSigner find change address
   const sysChangeAddress = null
   const outputsArr = [
-    { address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae', value: new syscoinjs.utils.BN(100000000) }
+    { address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae', value: new sjs.utils.BN(100000000) }
   ]
   const psbt = await syscoinjs.createTransaction(txOpts, sysChangeAddress, outputsArr, feeRate)
   if(!psbt) {
@@ -31,9 +31,9 @@ async function sendSys () {
 }
 
 async function newAsset () {
-  const feeRate = new syscoinjs.utils.BN(10)
+  const feeRate = new sjs.utils.BN(10)
   const txOpts = { rbf: false }
-  const assetOpts = { precision: 8, symbol: 'CAT', maxsupply: new syscoinjs.utils.BN(100000000000), description: 'publicvalue' }
+  const assetOpts = { precision: 8, symbol: 'CAT', maxsupply: new sjs.utils.BN(100000000000), description: 'publicvalue' }
   // let HDSigner find change address
   const sysChangeAddress = null
   // let HDSigner find asset destination address
@@ -55,7 +55,7 @@ async function newAsset () {
 }
 
 async function updateAsset () {
-  const feeRate = new syscoinjs.utils.BN(10)
+  const feeRate = new sjs.utils.BN(10)
   const txOpts = { rbf: true }
   const assetGuid = 3372068234
   // update capability flags, update description and update eth smart contract address
@@ -79,12 +79,12 @@ async function updateAsset () {
 }
 
 async function issueAsset () {
-  const feeRate = new syscoinjs.utils.BN(10)
+  const feeRate = new sjs.utils.BN(10)
   const txOpts = { rbf: true }
   const assetGuid = 3372068234
   // mint 1000 satoshi (not COINS)
   const assetMap = new Map([
-    [assetGuid, { outputs: [{ value: new syscoinjs.utils.BN(1000), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
+    [assetGuid, { outputs: [{ value: new sjs.utils.BN(1000), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
   ])
   // let HDSigner find change address
   const sysChangeAddress = null
@@ -105,13 +105,13 @@ async function issueAsset () {
 }
 
 async function sendAsset () {
-  const feeRate = new syscoinjs.utils.BN(10)
+  const feeRate = new sjs.utils.BN(10)
   // set to false for ZDAG, true disables it but it is replaceable by bumping the fee
   const txOpts = { rbf: true }
   const assetGuid = 3372068234
   // send 10 satoshi (not COINS)
   const assetMap = new Map([
-    [assetGuid, { outputs: [{ value: new syscoinjs.utils.BN(10), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
+    [assetGuid, { outputs: [{ value: new sjs.utils.BN(10), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
   ])
   // let HDSigner find change address
   const sysChangeAddress = null
@@ -132,7 +132,7 @@ async function sendAsset () {
 }
 
 async function assetBurnToSys () {
-  const feeRate = new syscoinjs.utils.BN(10)
+  const feeRate = new sjs.utils.BN(10)
   const txOpts = { rbf: true }
   // empty ethaddress means burning SYSX to SYS, otherwise its burning asset to goto Etheruem
   const assetOpts = { ethaddress: Buffer.from('') }
@@ -140,7 +140,7 @@ async function assetBurnToSys () {
   const assetGuid = 3372068234
   // burn 1 satoshi (not COINS)
   const assetMap = new Map([
-    [assetGuid, { outputs: [{ value: new syscoinjs.utils.BN(1), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
+    [assetGuid, { outputs: [{ value: new sjs.utils.BN(1), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
   ])
   // let HDSigner find change address
   const sysChangeAddress = null
@@ -161,13 +161,13 @@ async function assetBurnToSys () {
 }
 
 async function sysBurnToAsset () {
-  const feeRate = new syscoinjs.utils.BN(10)
+  const feeRate = new sjs.utils.BN(10)
   const txOpts = { rbf: true } 
   // asset and address being minted to from Eth to Sys
   const mintAddress = 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae'
   const assetGuid = 3372068234
   // mint 10 COINS
-  const amountToMint = new syscoinjs.utils.BN(1000000000)
+  const amountToMint = new sjs.utils.BN(1000000000)
   const assetMap = new Map([
     [assetGuid, { outputs: [{ value: amountToMint, address: mintAddress }] }]
   ])
@@ -190,14 +190,14 @@ async function sysBurnToAsset () {
 }
 
 async function assetBurnToEth () {
-  const feeRate = new syscoinjs.utils.BN(10)
+  const feeRate = new sjs.utils.BN(10)
   const txOpts = { rbf: true }
   const assetOpts = { ethaddress: Buffer.from('9667de58c15475626165eaa4c9970e409e1181d0', 'hex') }
   // in reality this would be a known asset (SYSX)
   const assetGuid = 3372068234
   // burn 1 satoshi (not COINS)
   const assetMap = new Map([
-    [assetGuid, { outputs: [{ value: new syscoinjs.utils.BN(1), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
+    [assetGuid, { outputs: [{ value: new sjs.utils.BN(1), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
   ])
   // let HDSigner find change address
   const sysChangeAddress = null
@@ -218,7 +218,7 @@ async function assetBurnToEth () {
 }
 
 async function assetMintToSys () {
-  const feeRate = new syscoinjs.utils.BN(10)
+  const feeRate = new sjs.utils.BN(10)
   const txOpts = { rbf: true } 
   const assetOpts = {
     bridgetransferid: 2,
@@ -235,7 +235,7 @@ async function assetMintToSys () {
   const mintAddress = 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae'
   const assetGuid = 2615707979
   // mint 100 COINS
-  const amountToMint = new syscoinjs.utils.BN(10000000000)
+  const amountToMint = new sjs.utils.BN(10000000000)
   const assetMap = new Map([
     [assetGuid, { outputs: [{ value: amountToMint, address: mintAddress }] }]
   ])
@@ -259,7 +259,7 @@ async function assetMintToSys () {
 
 // pass just Eth txid and let syscoinjslib get proof to create transaction
 async function assetMintToSys2 () {
-  const feeRate = new syscoinjs.utils.BN(10)
+  const feeRate = new sjs.utils.BN(10)
   const txOpts = { rbf: true } 
   // infura URL + ID and ethereum burn txid
   const assetOpts = { 
