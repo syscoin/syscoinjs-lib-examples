@@ -1,7 +1,7 @@
 const sjs = require('syscoinjs-lib')
 const mnemonic = 'club toss element melody skin ship rifle student reason real interest insane elevator beauty movie'
 // blockbook URL
-const backendURL = 'https://localhost:9130'
+const backendURL = 'http://localhost:9130' // if using localhost you don't need SSL see use 'systemctl edit --full blockbook-syscoin.service' to remove SSL from blockbook
 // 'null' for no password encryption for local storage and 'true' for testnet
 const HDSigner = new sjs.utils.HDSigner(mnemonic, null, true)
 const syscoinjs = new sjs.SyscoinJSLib(HDSigner, backendURL)
