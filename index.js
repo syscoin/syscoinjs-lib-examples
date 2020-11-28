@@ -26,7 +26,7 @@ async function sendSys () {
   } else if (resSend.result) {
     console.log('tx successfully sent! txid: ' + resSend.result)
   } else {
-    console.log('Unrecognized response from backend')
+    console.log('Unrecognized response from backend: ' + resSend)
   }
 }
 
@@ -50,7 +50,7 @@ async function newAsset () {
   } else if (resSend.result) {
     console.log('tx successfully sent! txid: ' + resSend.result)
   } else {
-    console.log('Unrecognized response from backend')
+    console.log('Unrecognized response from backend: ' + resSend)
   }
 }
 
@@ -74,7 +74,7 @@ async function updateAsset () {
   } else if (resSend.result) {
     console.log('tx successfully sent! txid: ' + resSend.result)
   } else {
-    console.log('Unrecognized response from backend')
+    console.log('Unrecognized response from backend: ' + resSend)
   }
 }
 
@@ -100,7 +100,7 @@ async function issueAsset () {
   } else if (resSend.result) {
     console.log('tx successfully sent! txid: ' + resSend.result)
   } else {
-    console.log('Unrecognized response from backend')
+    console.log('Unrecognized response from backend: ' + resSend)
   }
 }
 
@@ -127,7 +127,7 @@ async function sendAsset () {
   } else if (resSend.result) {
     console.log('tx successfully sent! txid: ' + resSend.result)
   } else {
-    console.log('Unrecognized response from backend')
+    console.log('Unrecognized response from backend: ' + resSend)
   }
 }
 
@@ -156,7 +156,7 @@ async function assetBurnToSys () {
   } else if (resSend.result) {
     console.log('tx successfully sent! txid: ' + resSend.result)
   } else {
-    console.log('Unrecognized response from backend')
+    console.log('Unrecognized response from backend: ' + resSend)
   }
 }
 
@@ -185,7 +185,7 @@ async function sysBurnToAsset () {
   } else if (resSend.result) {
     console.log('tx successfully sent! txid: ' + resSend.result)
   } else {
-    console.log('Unrecognized response from backend')
+    console.log('Unrecognized response from backend: ' + resSend)
   }
 }
 
@@ -213,7 +213,7 @@ async function assetBurnToEth () {
   } else if (resSend.result) {
     console.log('tx successfully sent! txid: ' + resSend.result)
   } else {
-    console.log('Unrecognized response from backend')
+    console.log('Unrecognized response from backend: ' + resSend)
   }
 }
 
@@ -253,7 +253,7 @@ async function assetMintToSys () {
   } else if (resSend.result) {
     console.log('tx successfully sent! txid: ' + resSend.result)
   } else {
-    console.log('Unrecognized response from backend')
+    console.log('Unrecognized response from backend: ' + resSend)
   }
 }
 
@@ -282,7 +282,7 @@ async function assetMintToSys2 () {
   } else if (resSend.result) {
     console.log('tx successfully sent! txid: ' + resSend.result)
   } else {
-    console.log('Unrecognized response from backend')
+    console.log('Unrecognized response from backend: ' + resSend)
   }
 }
 
