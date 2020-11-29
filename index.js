@@ -15,7 +15,7 @@ async function sendSys () {
     { address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae', value: new sjs.utils.BN(100000000) }
   ]
   const psbt = await syscoinjs.createTransaction(txOpts, sysChangeAddress, outputsArr, feeRate)
-  if(!psbt) {
+  if (!psbt) {
     console.log('Could not create transaction, not enough funds?')
     return
   }
@@ -39,7 +39,7 @@ async function newAsset () {
   // let HDSigner find asset destination address
   const sysReceivingAddress = null
   const psbt = await syscoinjs.assetNew(assetOpts, txOpts, sysChangeAddress, sysReceivingAddress, feeRate)
-  if(!psbt) {
+  if (!psbt) {
     console.log('Could not create transaction, not enough funds?')
     return
   }
@@ -59,11 +59,11 @@ async function updateAsset () {
   const txOpts = { rbf: true }
   const assetGuid = 3372068234
   // update capability flags, update description and update eth smart contract address
-  const assetOpts =  { updatecapabilityflags: 123, contract: Buffer.from('2b1e58b979e4b2d72d8bca5bb4646ccc032ddbfc', 'hex'), description: 'new publicvalue' }
+  const assetOpts = { updatecapabilityflags: 123, contract: Buffer.from('2b1e58b979e4b2d72d8bca5bb4646ccc032ddbfc', 'hex'), description: 'new publicvalue' }
   // let HDSigner find change address
   const sysChangeAddress = null
   const psbt = await syscoinjs.assetUpdate(assetGuid, assetOpts, txOpts, sysChangeAddress, feeRate)
-  if(!psbt) {
+  if (!psbt) {
     console.log('Could not create transaction, not enough funds?')
     return
   }
@@ -89,7 +89,7 @@ async function issueAsset () {
   // let HDSigner find change address
   const sysChangeAddress = null
   const psbt = await syscoinjs.assetSend(txOpts, assetMap, sysChangeAddress, feeRate)
-  if(!psbt) {
+  if (!psbt) {
     console.log('Could not create transaction, not enough funds?')
     return
   }
@@ -116,7 +116,7 @@ async function sendAsset () {
   // let HDSigner find change address
   const sysChangeAddress = null
   const psbt = await syscoinjs.assetAllocationSend(txOpts, assetMap, sysChangeAddress, feeRate)
-  if(!psbt) {
+  if (!psbt) {
     console.log('Could not create transaction, not enough funds?')
     return
   }
@@ -145,7 +145,7 @@ async function assetBurnToSys () {
   // let HDSigner find change address
   const sysChangeAddress = null
   const psbt = await syscoinjs.assetAllocationBurn(assetOpts, txOpts, assetMap, sysChangeAddress, feeRate)
-  if(!psbt) {
+  if (!psbt) {
     console.log('Could not create transaction, not enough funds?')
     return
   }
@@ -162,7 +162,7 @@ async function assetBurnToSys () {
 
 async function sysBurnToAsset () {
   const feeRate = new sjs.utils.BN(10)
-  const txOpts = { rbf: true } 
+  const txOpts = { rbf: true }
   // asset and address being minted to from Eth to Sys
   const mintAddress = 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae'
   const assetGuid = 3372068234
@@ -174,7 +174,7 @@ async function sysBurnToAsset () {
   // let HDSigner find change address
   const sysChangeAddress = null
   const psbt = await syscoinjs.syscoinBurnToAssetAllocation(txOpts, assetMap, sysChangeAddress, feeRate)
-  if(!psbt) {
+  if (!psbt) {
     console.log('Could not create transaction, not enough funds?')
     return
   }
@@ -202,7 +202,7 @@ async function assetBurnToEth () {
   // let HDSigner find change address
   const sysChangeAddress = null
   const psbt = await syscoinjs.assetAllocationBurn(assetOpts, txOpts, assetMap, sysChangeAddress, feeRate)
-  if(!psbt) {
+  if (!psbt) {
     console.log('Could not create transaction, not enough funds?')
     return
   }
@@ -219,7 +219,7 @@ async function assetBurnToEth () {
 
 async function assetMintToSys () {
   const feeRate = new sjs.utils.BN(10)
-  const txOpts = { rbf: true } 
+  const txOpts = { rbf: true }
   const assetOpts = {
     bridgetransferid: 2,
     blocknumber: 6816449,
@@ -242,7 +242,7 @@ async function assetMintToSys () {
   // let HDSigner find change address
   const sysChangeAddress = null
   const psbt = await syscoinjs.assetAllocationMint(assetOpts, txOpts, assetMap, sysChangeAddress, feeRate)
-  if(!psbt) {
+  if (!psbt) {
     console.log('Could not create transaction, not enough funds?')
     return
   }
@@ -260,9 +260,9 @@ async function assetMintToSys () {
 // pass just Eth txid and let syscoinjslib get proof to create transaction
 async function assetMintToSys2 () {
   const feeRate = new sjs.utils.BN(10)
-  const txOpts = { rbf: true } 
+  const txOpts = { rbf: true }
   // infura URL + ID and ethereum burn txid
-  const assetOpts = { 
+  const assetOpts = {
     infuraurl: '<YOUR INFURA URL>',
     ethtxid: '0x3c3bfe141fcbe313f2afd31be1b63dd3a0147235161e637407fbb8605d3d294f'
   }
@@ -271,7 +271,7 @@ async function assetMintToSys2 () {
   // let HDSigner find change address
   const sysChangeAddress = null
   const psbt = await syscoinjs.assetAllocationMint(assetOpts, txOpts, assetMap, sysChangeAddress, feeRate)
-  if(!psbt) {
+  if (!psbt) {
     console.log('Could not create transaction, not enough funds?')
     return
   }
