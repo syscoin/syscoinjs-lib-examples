@@ -60,6 +60,39 @@ async function updateAsset () {
   const assetGuid = 3372068234
   // update capability flags, update description and update eth smart contract address
   const assetOpts = { updatecapabilityflags: 123, contract: Buffer.from('2b1e58b979e4b2d72d8bca5bb4646ccc032ddbfc', 'hex'), description: 'new publicvalue' }
+  // send asset back to ourselves as well as any change
+  const assetChangeAddress = await HDSigner.getNewChangeAddress()
+  // send change back to ourselves as well as recipient to ourselves
+  const assetMap = new Map([
+    [assetGuid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(0), address: assetChangeAddress }] }]
+  ])
+  // let HDSigner find change address
+  const sysChangeAddress = null
+  const psbt = await syscoinjs.assetUpdate(assetGuid, assetOpts, txOpts, sysChangeAddress, feeRate)
+  if (!psbt) {
+    console.log('Could not create transaction, not enough funds?')
+    return
+  }
+  // example of once you have it signed you can push it to network via backend provider
+  const resSend = await sjs.utils.sendRawTransaction(syscoinjs.blockbookURL, psbt.extractTransaction().toHex(), HDSigner)
+  if (resSend.error) {
+    console.log('could not send tx! error: ' + resSend.error.message)
+  } else if (resSend.result) {
+    console.log('tx successfully sent! txid: ' + resSend.result)
+  } else {
+    console.log('Unrecognized response from backend: ' + resSend)
+  }
+}
+
+async function transferAsset () {
+  const feeRate = new sjs.utils.BN(10)
+  const txOpts = { rbf: true }
+  const assetGuid = 3372068234
+  const assetOpts = { }
+  // send asset to tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae and it will send change to new output owned by HDSigner
+  const assetMap = new Map([
+    [assetGuid, { outputs: [{ value: new sjs.utils.BN(0), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
+  ])
   // let HDSigner find change address
   const sysChangeAddress = null
   const psbt = await syscoinjs.assetUpdate(assetGuid, assetOpts, txOpts, sysChangeAddress, feeRate)

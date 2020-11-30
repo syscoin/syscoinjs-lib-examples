@@ -36,10 +36,10 @@
     "standard": "standard"
   },
   "devDependencies": {
-    "nyc": "^8.3.2",
+    "nyc": "^15.0.1",
     "standard": "*"
   },
   "dependencies": {
-    "syscoinjs-lib": "^1.0.67"
+    "syscoinjs-lib": "^1.0.70"
   }
 }
