@@ -19,15 +19,7 @@ async function sendSys () {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  // example of once you have it signed you can push it to network via backend provider
-  const resSend = await sjs.utils.sendRawTransaction(syscoinjs.blockbookURL, psbt.extractTransaction().toHex(), HDSigner)
-  if (resSend.error) {
-    console.log('could not send tx! error: ' + resSend.error.message)
-  } else if (resSend.result) {
-    console.log('tx successfully sent! txid: ' + resSend.result)
-  } else {
-    console.log('Unrecognized response from backend: ' + resSend)
-  }
+  console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
 }
 
 async function newAsset () {
@@ -43,15 +35,7 @@ async function newAsset () {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  // example of once you have it signed you can push it to network via backend provider
-  const resSend = await sjs.utils.sendRawTransaction(syscoinjs.blockbookURL, psbt.extractTransaction().toHex(), HDSigner)
-  if (resSend.error) {
-    console.log('could not send tx! error: ' + resSend.error.message)
-  } else if (resSend.result) {
-    console.log('tx successfully sent! txid: ' + resSend.result)
-  } else {
-    console.log('Unrecognized response from backend: ' + resSend)
-  }
+  console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
 }
 
 async function updateAsset () {
@@ -68,20 +52,12 @@ async function updateAsset () {
   ])
   // let HDSigner find change address
   const sysChangeAddress = null
-  const psbt = await syscoinjs.assetUpdate(assetGuid, assetOpts, txOpts, sysChangeAddress, feeRate)
+  const psbt = await syscoinjs.assetUpdate(assetGuid, assetOpts, txOpts, assetMap, sysChangeAddress, feeRate)
   if (!psbt) {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  // example of once you have it signed you can push it to network via backend provider
-  const resSend = await sjs.utils.sendRawTransaction(syscoinjs.blockbookURL, psbt.extractTransaction().toHex(), HDSigner)
-  if (resSend.error) {
-    console.log('could not send tx! error: ' + resSend.error.message)
-  } else if (resSend.result) {
-    console.log('tx successfully sent! txid: ' + resSend.result)
-  } else {
-    console.log('Unrecognized response from backend: ' + resSend)
-  }
+  console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
 }
 
 async function transferAsset () {
@@ -95,20 +71,12 @@ async function transferAsset () {
   ])
   // let HDSigner find change address
   const sysChangeAddress = null
-  const psbt = await syscoinjs.assetUpdate(assetGuid, assetOpts, txOpts, sysChangeAddress, feeRate)
+  const psbt = await syscoinjs.assetUpdate(assetGuid, assetOpts, txOpts, assetMap, sysChangeAddress, feeRate)
   if (!psbt) {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  // example of once you have it signed you can push it to network via backend provider
-  const resSend = await sjs.utils.sendRawTransaction(syscoinjs.blockbookURL, psbt.extractTransaction().toHex(), HDSigner)
-  if (resSend.error) {
-    console.log('could not send tx! error: ' + resSend.error.message)
-  } else if (resSend.result) {
-    console.log('tx successfully sent! txid: ' + resSend.result)
-  } else {
-    console.log('Unrecognized response from backend: ' + resSend)
-  }
+  console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
 }
 
 async function issueAsset () {
@@ -126,25 +94,17 @@ async function issueAsset () {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  // example of once you have it signed you can push it to network via backend provider
-  const resSend = await sjs.utils.sendRawTransaction(syscoinjs.blockbookURL, psbt.extractTransaction().toHex(), HDSigner)
-  if (resSend.error) {
-    console.log('could not send tx! error: ' + resSend.error.message)
-  } else if (resSend.result) {
-    console.log('tx successfully sent! txid: ' + resSend.result)
-  } else {
-    console.log('Unrecognized response from backend: ' + resSend)
-  }
+  console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
 }
 
 async function sendAsset () {
+  console.log('Account XPUB: ' + HDSigner.getAccountXpub())
   const feeRate = new sjs.utils.BN(10)
   // set to false for ZDAG, true disables it but it is replaceable by bumping the fee
   const txOpts = { rbf: true }
-  const assetGuid = 3372068234
-  // send 10 satoshi (not COINS)
+  const assetguid = 2102391361
   const assetMap = new Map([
-    [assetGuid, { outputs: [{ value: new sjs.utils.BN(10), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
+    [assetguid, { outputs: [{ value: new sjs.utils.BN(100000000), address: 'tsys1qk0mrytgd06tc4rdtcs7h6nvx9ph67rjavv7qx6' }] }]
   ])
   // let HDSigner find change address
   const sysChangeAddress = null
@@ -153,15 +113,45 @@ async function sendAsset () {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  // example of once you have it signed you can push it to network via backend provider
-  const resSend = await sjs.utils.sendRawTransaction(syscoinjs.blockbookURL, psbt.extractTransaction().toHex(), HDSigner)
-  if (resSend.error) {
-    console.log('could not send tx! error: ' + resSend.error.message)
-  } else if (resSend.result) {
-    console.log('tx successfully sent! txid: ' + resSend.result)
-  } else {
-    console.log('Unrecognized response from backend: ' + resSend)
+  console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
+}
+
+async function sendAssetFundedByAddress () {
+  const feeRate = new sjs.utils.BN(10)
+  // set to false for ZDAG, true disables it but it is replaceable by bumping the fee
+  const txOpts = { rbf: true }
+  const assetguid = 2102391361
+  const assetMap = new Map([
+    [assetguid, { outputs: [{ value: new sjs.utils.BN(100000000), address: 'tsys1qk0mrytgd06tc4rdtcs7h6nvx9ph67rjavv7qx6' }] }]
+  ])
+  // let HDSigner find change address
+  const sysChangeAddress = null
+  const result = await syscoinjs.assetAllocationSend(txOpts, assetMap, sysChangeAddress, feeRate, 'tsys1qd2wejyl606fratchj0emvwcl78p67wq4x9cy4w')
+  if (!result) {
+    console.log('Could not create transaction, not enough funds?')
+    return
   }
+  const psbt = await syscoinjs.signAndSendWithWIF(result.res, 'cSRej8siHpwEKN9Mzh8s7WFwFenhb2my5dnyWK8pH1jUwonCvEdP', result.assets)
+  console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
+}
+
+async function sendAssetFundedByXPUB () {
+  const feeRate = new sjs.utils.BN(10)
+  // set to false for ZDAG, true disables it but it is replaceable by bumping the fee
+  const txOpts = { rbf: true }
+  const assetguid = 2102391361
+  const assetMap = new Map([
+    [assetguid, { outputs: [{ value: new sjs.utils.BN(100000000), address: 'tsys1qk0mrytgd06tc4rdtcs7h6nvx9ph67rjavv7qx6' }] }]
+  ])
+  // let HDSigner find change address
+  const sysChangeAddress = null
+  const result = await syscoinjs.assetAllocationSend(txOpts, assetMap, sysChangeAddress, feeRate, 'vpub5YRAiaSdofukzKaR3uMCnPxL41yFFJpDsr9jn93FXFVZkJWx2sedirtJHeWvJRVoisYJuDqVp8r9Z1fuAS33oekzgZe5U3sg2ENWe8Dtb2G')
+  if (!result) {
+    console.log('Could not create transaction, not enough funds?')
+    return
+  }
+  const psbt = await syscoinjs.signAndSendWithHDSigner(result.res, HDSigner, result.assets)
+  console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
 }
 
 async function assetBurnToSys () {
@@ -182,15 +172,7 @@ async function assetBurnToSys () {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  // example of once you have it signed you can push it to network via backend provider
-  const resSend = await sjs.utils.sendRawTransaction(syscoinjs.blockbookURL, psbt.extractTransaction().toHex(), HDSigner)
-  if (resSend.error) {
-    console.log('could not send tx! error: ' + resSend.error.message)
-  } else if (resSend.result) {
-    console.log('tx successfully sent! txid: ' + resSend.result)
-  } else {
-    console.log('Unrecognized response from backend: ' + resSend)
-  }
+  console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
 }
 
 async function sysBurnToAsset () {
@@ -211,15 +193,7 @@ async function sysBurnToAsset () {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  // example of once you have it signed you can push it to network via backend provider
-  const resSend = await sjs.utils.sendRawTransaction(syscoinjs.blockbookURL, psbt.extractTransaction().toHex(), HDSigner)
-  if (resSend.error) {
-    console.log('could not send tx! error: ' + resSend.error.message)
-  } else if (resSend.result) {
-    console.log('tx successfully sent! txid: ' + resSend.result)
-  } else {
-    console.log('Unrecognized response from backend: ' + resSend)
-  }
+  console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
 }
 
 async function assetBurnToEth () {
@@ -239,15 +213,7 @@ async function assetBurnToEth () {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  // example of once you have it signed you can push it to network via backend provider
-  const resSend = await sjs.utils.sendRawTransaction(syscoinjs.blockbookURL, psbt.extractTransaction().toHex(), HDSigner)
-  if (resSend.error) {
-    console.log('could not send tx! error: ' + resSend.error.message)
-  } else if (resSend.result) {
-    console.log('tx successfully sent! txid: ' + resSend.result)
-  } else {
-    console.log('Unrecognized response from backend: ' + resSend)
-  }
+  console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
 }
 
 async function assetMintToSys () {
@@ -279,15 +245,7 @@ async function assetMintToSys () {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  // example of once you have it signed you can push it to network via backend provider
-  const resSend = await sjs.utils.sendRawTransaction(syscoinjs.blockbookURL, psbt.extractTransaction().toHex(), HDSigner)
-  if (resSend.error) {
-    console.log('could not send tx! error: ' + resSend.error.message)
-  } else if (resSend.result) {
-    console.log('tx successfully sent! txid: ' + resSend.result)
-  } else {
-    console.log('Unrecognized response from backend: ' + resSend)
-  }
+  console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
 }
 
 // pass just Eth txid and let syscoinjslib get proof to create transaction
@@ -308,15 +266,7 @@ async function assetMintToSys2 () {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  // example of once you have it signed you can push it to network via backend provider
-  const resSend = await sjs.utils.sendRawTransaction(syscoinjs.blockbookURL, psbt.extractTransaction().toHex(), HDSigner)
-  if (resSend.error) {
-    console.log('could not send tx! error: ' + resSend.error.message)
-  } else if (resSend.result) {
-    console.log('tx successfully sent! txid: ' + resSend.result)
-  } else {
-    console.log('Unrecognized response from backend: ' + resSend)
-  }
+  console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
 }
 
-sysBurnToAsset()
+sendAsset()
