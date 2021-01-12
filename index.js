@@ -9,7 +9,7 @@ const syscoinjs = new sjs.SyscoinJSLib(HDSigner, backendURL)
 async function sendSys () {
   const feeRate = new sjs.utils.BN(10)
   const txOpts = { rbf: false }
-  // let HDSigner find change address
+  // if SYS need change sent, set this address. null to let HDSigner find a new address for you
   const sysChangeAddress = null
   const outputsArr = [
     { address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae', value: new sjs.utils.BN(100000000) }
@@ -26,7 +26,7 @@ async function newAsset () {
   const feeRate = new sjs.utils.BN(10)
   const txOpts = { rbf: false }
   const assetOpts = { precision: 8, symbol: 'CAT', maxsupply: new sjs.utils.BN(100000000000), description: 'publicvalue' }
-  // let HDSigner find change address
+  // if SYS need change sent, set this address. null to let HDSigner find a new address for you
   const sysChangeAddress = null
   // let HDSigner find asset destination address
   const sysReceivingAddress = null
@@ -45,12 +45,12 @@ async function updateAsset () {
   // update capability flags, update description and update eth smart contract address
   const assetOpts = { updatecapabilityflags: 123, contract: Buffer.from('2b1e58b979e4b2d72d8bca5bb4646ccc032ddbfc', 'hex'), description: 'new publicvalue' }
   // send asset back to ourselves as well as any change
-  const assetChangeAddress = await HDSigner.getNewChangeAddress()
+  const assetChangeAddress = null
   // send change back to ourselves as well as recipient to ourselves
   const assetMap = new Map([
     [assetGuid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(0), address: assetChangeAddress }] }]
   ])
-  // let HDSigner find change address
+  // if SYS need change sent, set this address. null to let HDSigner find a new address for you
   const sysChangeAddress = null
   const psbt = await syscoinjs.assetUpdate(assetGuid, assetOpts, txOpts, assetMap, sysChangeAddress, feeRate)
   if (!psbt) {
@@ -66,10 +66,12 @@ async function transferAsset () {
   const assetGuid = 3372068234
   const assetOpts = { }
   // send asset to tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae and it will send change to new output owned by HDSigner
+  // if assets need change sent, set this address. null to let HDSigner find a new address for you
+  const assetChangeAddress = null
   const assetMap = new Map([
-    [assetGuid, { outputs: [{ value: new sjs.utils.BN(0), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
+    [assetGuid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(0), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
   ])
-  // let HDSigner find change address
+  // if SYS need change sent, set this address. null to let HDSigner find a new address for you
   const sysChangeAddress = null
   const psbt = await syscoinjs.assetUpdate(assetGuid, assetOpts, txOpts, assetMap, sysChangeAddress, feeRate)
   if (!psbt) {
@@ -84,10 +86,12 @@ async function issueAsset () {
   const txOpts = { rbf: true }
   const assetGuid = 3372068234
   // mint 1000 satoshi (not COINS)
+  // if assets need change sent, set this address. null to let HDSigner find a new address for you
+  const assetChangeAddress = null
   const assetMap = new Map([
-    [assetGuid, { outputs: [{ value: new sjs.utils.BN(1000), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
+    [assetGuid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(1000), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
   ])
-  // let HDSigner find change address
+  // if SYS need change sent, set this address. null to let HDSigner find a new address for you
   const sysChangeAddress = null
   const psbt = await syscoinjs.assetSend(txOpts, assetMap, sysChangeAddress, feeRate)
   if (!psbt) {
@@ -103,10 +107,12 @@ async function sendAsset () {
   // set to false for ZDAG, true disables it but it is replaceable by bumping the fee
   const txOpts = { rbf: true }
   const assetguid = 2102391361
+  // if assets need change sent, set this address. null to let HDSigner find a new address for you
+  const assetChangeAddress = null
   const assetMap = new Map([
-    [assetguid, { outputs: [{ value: new sjs.utils.BN(100000000), address: 'tsys1qk0mrytgd06tc4rdtcs7h6nvx9ph67rjavv7qx6' }] }]
+    [assetguid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(100000000), address: 'tsys1qk0mrytgd06tc4rdtcs7h6nvx9ph67rjavv7qx6' }] }]
   ])
-  // let HDSigner find change address
+  // if SYS need change sent, set this address. null to let HDSigner find a new address for you
   const sysChangeAddress = null
   const psbt = await syscoinjs.assetAllocationSend(txOpts, assetMap, sysChangeAddress, feeRate)
   if (!psbt) {
@@ -121,10 +127,12 @@ async function sendAssetFundedByAddress () {
   // set to false for ZDAG, true disables it but it is replaceable by bumping the fee
   const txOpts = { rbf: true }
   const assetguid = 2102391361
+  // if assets need change sent, set this address. null to let HDSigner find a new address for you
+  const assetChangeAddress = null
   const assetMap = new Map([
-    [assetguid, { outputs: [{ value: new sjs.utils.BN(100000000), address: 'tsys1qk0mrytgd06tc4rdtcs7h6nvx9ph67rjavv7qx6' }] }]
+    [assetguid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(100000000), address: 'tsys1qk0mrytgd06tc4rdtcs7h6nvx9ph67rjavv7qx6' }] }]
   ])
-  // let HDSigner find change address
+  // if SYS need change sent, set this address. null to let HDSigner find a new address for you
   const sysChangeAddress = null
   const result = await syscoinjs.assetAllocationSend(txOpts, assetMap, sysChangeAddress, feeRate, 'tsys1qd2wejyl606fratchj0emvwcl78p67wq4x9cy4w')
   if (!result) {
@@ -140,10 +148,12 @@ async function sendAssetFundedByXPUB () {
   // set to false for ZDAG, true disables it but it is replaceable by bumping the fee
   const txOpts = { rbf: true }
   const assetguid = 2102391361
+  // if assets need change sent, set this address. null to let HDSigner find a new address for you
+  const assetChangeAddress = null
   const assetMap = new Map([
-    [assetguid, { outputs: [{ value: new sjs.utils.BN(100000000), address: 'tsys1qk0mrytgd06tc4rdtcs7h6nvx9ph67rjavv7qx6' }] }]
+    [assetguid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(100000000), address: 'tsys1qk0mrytgd06tc4rdtcs7h6nvx9ph67rjavv7qx6' }] }]
   ])
-  // let HDSigner find change address
+  // if SYS need change sent, set this address. null to let HDSigner find a new address for you
   const sysChangeAddress = null
   const result = await syscoinjs.assetAllocationSend(txOpts, assetMap, sysChangeAddress, feeRate, 'vpub5YRAiaSdofukzKaR3uMCnPxL41yFFJpDsr9jn93FXFVZkJWx2sedirtJHeWvJRVoisYJuDqVp8r9Z1fuAS33oekzgZe5U3sg2ENWe8Dtb2G')
   if (!result) {
@@ -162,10 +172,12 @@ async function assetBurnToSys () {
   // in reality this would be a known asset (SYSX)
   const assetGuid = 3372068234
   // burn 1 satoshi (not COINS)
+  // if assets need change sent, set this address. null to let HDSigner find a new address for you
+  const assetChangeAddress = null
   const assetMap = new Map([
-    [assetGuid, { outputs: [{ value: new sjs.utils.BN(1), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
+    [assetGuid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(1), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
   ])
-  // let HDSigner find change address
+  // if SYS need change sent, set this address. null to let HDSigner find a new address for you
   const sysChangeAddress = null
   const psbt = await syscoinjs.assetAllocationBurn(assetOpts, txOpts, assetMap, sysChangeAddress, feeRate)
   if (!psbt) {
@@ -183,10 +195,12 @@ async function sysBurnToAsset () {
   const assetGuid = 3372068234
   // mint 10 COINS
   const amountToMint = new sjs.utils.BN(1000000000)
+  // if assets need change sent, set this address. null to let HDSigner find a new address for you
+  const assetChangeAddress = null
   const assetMap = new Map([
-    [assetGuid, { outputs: [{ value: amountToMint, address: mintAddress }] }]
+    [assetGuid, { changeAddress: assetChangeAddress, outputs: [{ value: amountToMint, address: mintAddress }] }]
   ])
-  // let HDSigner find change address
+  // if SYS need change sent, set this address. null to let HDSigner find a new address for you
   const sysChangeAddress = null
   const psbt = await syscoinjs.syscoinBurnToAssetAllocation(txOpts, assetMap, sysChangeAddress, feeRate)
   if (!psbt) {
@@ -199,21 +213,25 @@ async function sysBurnToAsset () {
 async function assetBurnToEth () {
   const feeRate = new sjs.utils.BN(10)
   const txOpts = { rbf: true }
-  const assetOpts = { ethaddress: Buffer.from('9667de58c15475626165eaa4c9970e409e1181d0', 'hex') }
+  const assetOpts = { ethaddress: Buffer.from('07C72973d42D28de80D47Eb1F8Bc4a8ee0D5bBb1', 'hex') }
   // in reality this would be a known asset (SYSX)
-  const assetGuid = 3372068234
+  const assetGuid = 1965866356
   // burn 1 satoshi (not COINS)
+  // if assets need change sent, set this address. null to let HDSigner find a new address for you
+  const assetChangeAddress = 'tsys1q7zewkwya3je369vyzq5l5e83mrvdqwzgvv9nzg'
   const assetMap = new Map([
-    [assetGuid, { outputs: [{ value: new sjs.utils.BN(1), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
+    [assetGuid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(1), address: 'tsys1quexf5zalfak2cvv9mujkh9pc3f3wrcgz7gzhh5' }] }]
   ])
-  // let HDSigner find change address
-  const sysChangeAddress = null
-  const psbt = await syscoinjs.assetAllocationBurn(assetOpts, txOpts, assetMap, sysChangeAddress, feeRate)
+  // if SYS need change sent, set this address. null to let HDSigner find a new address for you
+  const sysChangeAddress = 'tsys1q7zewkwya3je369vyzq5l5e83mrvdqwzgvv9nzg'
+  const sysFromXpubOrAddress = 'vpub5ZdpZuCU7ubDRZ5V7uryBDBEZxDNP67FLgPyHgPtiVgjwDk8rjxAFbg4cHNAyp9ZLXNgJRq6f9QjWCc4Ef7gUxFivP7GkSKo6ANNb2jrzhA'
+  const psbt = await syscoinjs.assetAllocationBurn(assetOpts, txOpts, assetMap, sysChangeAddress, feeRate, sysFromXpubOrAddress)
   if (!psbt) {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
+  console.log("psbt: "+JSON.stringify(psbt))
+  //console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
 }
 
 async function assetMintToSys () {
@@ -235,10 +253,12 @@ async function assetMintToSys () {
   const assetGuid = 2615707979
   // mint 100 COINS
   const amountToMint = new sjs.utils.BN(10000000000)
+  // if assets need change sent, set this address. null to let HDSigner find a new address for you
+  const assetChangeAddress = null
   const assetMap = new Map([
-    [assetGuid, { outputs: [{ value: amountToMint, address: mintAddress }] }]
+    [assetGuid, { changeAddress: assetChangeAddress, outputs: [{ value: amountToMint, address: mintAddress }] }]
   ])
-  // let HDSigner find change address
+  // if SYS need change sent, set this address. null to let HDSigner find a new address for you
   const sysChangeAddress = null
   const psbt = await syscoinjs.assetAllocationMint(assetOpts, txOpts, assetMap, sysChangeAddress, feeRate)
   if (!psbt) {
@@ -259,7 +279,7 @@ async function assetMintToSys2 () {
   }
   // will be auto filled based on ethtxid eth-proof
   const assetMap = null
-  // let HDSigner find change address
+  // if SYS need change sent, set this address. null to let HDSigner find a new address for you
   const sysChangeAddress = null
   const psbt = await syscoinjs.assetAllocationMint(assetOpts, txOpts, assetMap, sysChangeAddress, feeRate)
   if (!psbt) {
@@ -269,4 +289,4 @@ async function assetMintToSys2 () {
   console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
 }
 
-sendAsset()
+assetBurnToEth()
