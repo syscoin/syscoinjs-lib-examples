@@ -41,7 +41,7 @@ async function newAsset () {
 async function updateAsset () {
   const feeRate = new sjs.utils.BN(10)
   const txOpts = { rbf: true }
-  const assetGuid = 3372068234
+  const assetGuid = '3372068234'
   // update capability flags, update description and update eth smart contract address
   const assetOpts = { updatecapabilityflags: 123, contract: Buffer.from('2b1e58b979e4b2d72d8bca5bb4646ccc032ddbfc', 'hex'), description: 'new publicvalue' }
   // send asset back to ourselves as well as any change
@@ -63,7 +63,7 @@ async function updateAsset () {
 async function transferAsset () {
   const feeRate = new sjs.utils.BN(10)
   const txOpts = { rbf: true }
-  const assetGuid = 3372068234
+  const assetGuid = '3372068234'
   const assetOpts = { }
   // send asset to tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae and it will send change to new output owned by HDSigner
   // if assets need change sent, set this address. null to let HDSigner find a new address for you
@@ -84,7 +84,7 @@ async function transferAsset () {
 async function issueAsset () {
   const feeRate = new sjs.utils.BN(10)
   const txOpts = { rbf: true }
-  const assetGuid = 3372068234
+  const assetGuid = '3372068234'
   // mint 1000 satoshi (not COINS)
   // if assets need change sent, set this address. null to let HDSigner find a new address for you
   const assetChangeAddress = null
@@ -106,7 +106,7 @@ async function sendAsset () {
   const feeRate = new sjs.utils.BN(10)
   // set to false for ZDAG, true disables it but it is replaceable by bumping the fee
   const txOpts = { rbf: true }
-  const assetguid = 2102391361
+  const assetguid = '2102391361'
   // if assets need change sent, set this address. null to let HDSigner find a new address for you
   const assetChangeAddress = null
   const assetMap = new Map([
@@ -126,7 +126,7 @@ async function sendAssetFundedByAddress () {
   const feeRate = new sjs.utils.BN(10)
   // set to false for ZDAG, true disables it but it is replaceable by bumping the fee
   const txOpts = { rbf: true }
-  const assetguid = 2102391361
+  const assetguid = '2102391361'
   // if assets need change sent, set this address. null to let HDSigner find a new address for you
   const assetChangeAddress = null
   const assetMap = new Map([
@@ -147,7 +147,7 @@ async function sendAssetFundedByXPUB () {
   const feeRate = new sjs.utils.BN(10)
   // set to false for ZDAG, true disables it but it is replaceable by bumping the fee
   const txOpts = { rbf: true }
-  const assetguid = 2102391361
+  const assetguid = '2102391361'
   // if assets need change sent, set this address. null to let HDSigner find a new address for you
   const assetChangeAddress = null
   const assetMap = new Map([
@@ -170,7 +170,7 @@ async function assetBurnToSys () {
   // empty ethaddress means burning SYSX to SYS, otherwise its burning asset to goto Etheruem
   const assetOpts = { ethaddress: Buffer.from('') }
   // in reality this would be a known asset (SYSX)
-  const assetGuid = 3372068234
+  const assetGuid = '3372068234'
   // burn 1 satoshi (not COINS)
   // if assets need change sent, set this address. null to let HDSigner find a new address for you
   const assetChangeAddress = null
@@ -192,7 +192,7 @@ async function sysBurnToAsset () {
   const txOpts = { rbf: true }
   // asset and address being minted to from Eth to Sys
   const mintAddress = 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae'
-  const assetGuid = 3372068234
+  const assetGuid = '3372068234'
   // mint 10 COINS
   const amountToMint = new sjs.utils.BN(1000000000)
   // if assets need change sent, set this address. null to let HDSigner find a new address for you
@@ -215,7 +215,7 @@ async function assetBurnToEth () {
   const txOpts = { rbf: true }
   const assetOpts = { ethaddress: Buffer.from('07C72973d42D28de80D47Eb1F8Bc4a8ee0D5bBb1', 'hex') }
   // in reality this would be a known asset (SYSX)
-  const assetGuid = 1965866356
+  const assetGuid = '1965866356'
   // burn 1 satoshi (not COINS)
   // if assets need change sent, set this address. null to let HDSigner find a new address for you
   const assetChangeAddress = 'tsys1q7zewkwya3je369vyzq5l5e83mrvdqwzgvv9nzg'
@@ -250,7 +250,7 @@ async function assetMintToSys () {
   }
   // asset and address being minted to from Eth to Sys
   const mintAddress = 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae'
-  const assetGuid = 2615707979
+  const assetGuid = '2615707979'
   // mint 100 COINS
   const amountToMint = new sjs.utils.BN(10000000000)
   // if assets need change sent, set this address. null to let HDSigner find a new address for you
