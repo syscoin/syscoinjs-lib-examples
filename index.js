@@ -1,7 +1,7 @@
 const sjs = require('syscoinjs-lib')
 const mnemonic = 'club toss element melody skin ship rifle student reason real interest insane elevator beauty movie'
 // blockbook URL
-const backendURL = 'http://localhost:9130' // if using localhost you don't need SSL see use 'systemctl edit --full blockbook-syscoin.service' to remove SSL from blockbook
+const backendURL = 'https://sys-explorer.tk/' // if using localhost you don't need SSL see use 'systemctl edit --full blockbook-syscoin.service' to remove SSL from blockbook
 // 'null' for no password encryption for local storage and 'true' for testnet
 const HDSigner = new sjs.utils.HDSigner(mnemonic, null, true)
 const syscoinjs = new sjs.SyscoinJSLib(HDSigner, backendURL)
@@ -19,7 +19,6 @@ async function sendSys () {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
 }
 
 async function newAsset () {
@@ -35,13 +34,12 @@ async function newAsset () {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
 }
 
 async function updateAsset () {
   const feeRate = new sjs.utils.BN(10)
   const txOpts = { rbf: true }
-  const assetGuid = '3372068234'
+  const assetGuid = '2125509931'
   // update capability flags, update description and update eth smart contract address
   const assetOpts = { updatecapabilityflags: 123, contract: Buffer.from('2b1e58b979e4b2d72d8bca5bb4646ccc032ddbfc', 'hex'), description: 'new publicvalue' }
   // send asset back to ourselves as well as any change
@@ -57,7 +55,6 @@ async function updateAsset () {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
 }
 
 async function transferAsset () {
@@ -78,18 +75,17 @@ async function transferAsset () {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
 }
 
 async function issueAsset () {
   const feeRate = new sjs.utils.BN(10)
   const txOpts = { rbf: true }
-  const assetGuid = '3372068234'
-  // mint 1000 satoshi (not COINS)
+  const assetGuid = '2264781424'
+  // mint 11000 satoshi (not COINS)
   // if assets need change sent, set this address. null to let HDSigner find a new address for you
   const assetChangeAddress = null
   const assetMap = new Map([
-    [assetGuid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(1000), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
+    [assetGuid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(11000), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae'}]}],
   ])
   // if SYS need change sent, set this address. null to let HDSigner find a new address for you
   const sysChangeAddress = null
@@ -98,7 +94,27 @@ async function issueAsset () {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
+}
+
+async function issueAssetNFT () {
+  const feeRate = new sjs.utils.BN(10)
+  const txOpts = { rbf: true }
+  const assetGuid = '2264781424'
+  const NFTID = sjs.utils.createAssetID('1', assetGuid)
+  // mint 1000 satoshi (not COINS)
+  // if assets need change sent, set this address. null to let HDSigner find a new address for you
+  const assetChangeAddress = null
+  const assetMap = new Map([
+    [assetGuid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(1000), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae'}]}],
+    [NFTID, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(1), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae'}]}]
+  ])
+  // if SYS need change sent, set this address. null to let HDSigner find a new address for you
+  const sysChangeAddress = null
+  const psbt = await syscoinjs.assetSend(txOpts, assetMap, sysChangeAddress, feeRate)
+  if (!psbt) {
+    console.log('Could not create transaction, not enough funds?')
+    return
+  }
 }
 
 async function sendAsset () {
@@ -119,7 +135,6 @@ async function sendAsset () {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
 }
 
 async function sendAssetFundedByAddress () {
@@ -139,8 +154,7 @@ async function sendAssetFundedByAddress () {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  const psbt = await syscoinjs.signAndSendWithWIF(result.res, 'cSRej8siHpwEKN9Mzh8s7WFwFenhb2my5dnyWK8pH1jUwonCvEdP', result.assets)
-  console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
+  await syscoinjs.signAndSendWithWIF(result.res, 'cSRej8siHpwEKN9Mzh8s7WFwFenhb2my5dnyWK8pH1jUwonCvEdP', result.assets)
 }
 
 async function sendAssetFundedByXPUB () {
@@ -160,8 +174,7 @@ async function sendAssetFundedByXPUB () {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  const psbt = await syscoinjs.signAndSendWithHDSigner(result.res, HDSigner, result.assets)
-  console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
+  await syscoinjs.signAndSendWithHDSigner(result.res, HDSigner, result.assets)
 }
 
 async function assetBurnToSys () {
@@ -184,7 +197,6 @@ async function assetBurnToSys () {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
 }
 
 async function sysBurnToAsset () {
@@ -207,7 +219,6 @@ async function sysBurnToAsset () {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
 }
 
 async function assetBurnToEth () {
@@ -230,8 +241,6 @@ async function assetBurnToEth () {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  console.log("psbt: "+JSON.stringify(psbt))
-  //console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
 }
 
 async function assetMintToSys () {
@@ -265,7 +274,6 @@ async function assetMintToSys () {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
 }
 
 // pass just Eth txid and let syscoinjslib get proof to create transaction
@@ -286,7 +294,7 @@ async function assetMintToSys2 () {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  console.log('tx successfully sent! txid: ' + psbt.extractTransaction().getId())
 }
 
-assetBurnToEth()
+
+issueAsset()
