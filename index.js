@@ -5,6 +5,8 @@ const backendURL = 'https://sys-explorer.tk/' // if using localhost you don't ne
 // 'null' for no password encryption for local storage and 'true' for testnet
 const HDSigner = new sjs.utils.HDSigner(mnemonic, null, true)
 const syscoinjs = new sjs.SyscoinJSLib(HDSigner, backendURL)
+const bitcoin = require('bitcoinjs-lib')
+const syscointx = require('syscointx-js')
 
 async function sendSys () {
   const feeRate = new sjs.utils.BN(10)
@@ -34,6 +36,9 @@ async function newAsset () {
     console.log('Could not create transaction, not enough funds?')
     return
   }
+  const tx = bitcoin.Transaction.fromHex(psbt.extractTransaction().toHex())
+  const assets = syscointx.getAssetsFromTx(tx)
+  console('created asset ' + assets.keys().next().value)
 }
 
 async function updateAsset () {
@@ -118,7 +123,6 @@ async function issueAssetNFT () {
 }
 
 async function sendAsset () {
-  console.log('Account XPUB: ' + HDSigner.getAccountXpub())
   const feeRate = new sjs.utils.BN(10)
   // set to false for ZDAG, true disables it but it is replaceable by bumping the fee
   const txOpts = { rbf: true }

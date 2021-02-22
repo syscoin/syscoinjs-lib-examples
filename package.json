@@ -40,6 +40,8 @@
     "standard": "*"
   },
   "dependencies": {
-    "syscoinjs-lib": "^1.0.93"
+    "bitcoinjs-lib": "^5.2.0",
+    "syscoinjs-lib": "^1.0.93",
+    "syscointx-js": "^1.0.66"
   }
 }
