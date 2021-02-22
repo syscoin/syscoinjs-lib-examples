@@ -5,7 +5,6 @@ const backendURL = 'https://sys-explorer.tk/' // if using localhost you don't ne
 // 'null' for no password encryption for local storage and 'true' for testnet
 const HDSigner = new sjs.utils.HDSigner(mnemonic, null, true)
 const syscoinjs = new sjs.SyscoinJSLib(HDSigner, backendURL)
-const bitcoin = require('bitcoinjs-lib')
 const syscointx = require('syscointx-js')
 
 async function sendSys () {
@@ -19,7 +18,6 @@ async function sendSys () {
   const psbt = await syscoinjs.createTransaction(txOpts, sysChangeAddress, outputsArr, feeRate)
   if (!psbt) {
     console.log('Could not create transaction, not enough funds?')
-    return
   }
 }
 
@@ -36,8 +34,7 @@ async function newAsset () {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  const tx = bitcoin.Transaction.fromHex(psbt.extractTransaction().toHex())
-  const assets = syscointx.getAssetsFromTx(tx)
+  const assets = syscointx.getAssetsFromTx(psbt.extractTransaction())
   console('created asset ' + assets.keys().next().value)
 }
 
@@ -58,7 +55,6 @@ async function updateAsset () {
   const psbt = await syscoinjs.assetUpdate(assetGuid, assetOpts, txOpts, assetMap, sysChangeAddress, feeRate)
   if (!psbt) {
     console.log('Could not create transaction, not enough funds?')
-    return
   }
 }
 
@@ -78,7 +74,6 @@ async function transferAsset () {
   const psbt = await syscoinjs.assetUpdate(assetGuid, assetOpts, txOpts, assetMap, sysChangeAddress, feeRate)
   if (!psbt) {
     console.log('Could not create transaction, not enough funds?')
-    return
   }
 }
 
@@ -90,14 +85,13 @@ async function issueAsset () {
   // if assets need change sent, set this address. null to let HDSigner find a new address for you
   const assetChangeAddress = null
   const assetMap = new Map([
-    [assetGuid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(11000), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae'}]}],
+    [assetGuid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(11000), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
   ])
   // if SYS need change sent, set this address. null to let HDSigner find a new address for you
   const sysChangeAddress = null
   const psbt = await syscoinjs.assetSend(txOpts, assetMap, sysChangeAddress, feeRate)
   if (!psbt) {
     console.log('Could not create transaction, not enough funds?')
-    return
   }
 }
 
@@ -110,15 +104,14 @@ async function issueAssetNFT () {
   // if assets need change sent, set this address. null to let HDSigner find a new address for you
   const assetChangeAddress = null
   const assetMap = new Map([
-    [assetGuid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(1000), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae'}]}],
-    [NFTID, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(1), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae'}]}]
+    [assetGuid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(1000), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }],
+    [NFTID, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(1), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
   ])
   // if SYS need change sent, set this address. null to let HDSigner find a new address for you
   const sysChangeAddress = null
   const psbt = await syscoinjs.assetSend(txOpts, assetMap, sysChangeAddress, feeRate)
   if (!psbt) {
     console.log('Could not create transaction, not enough funds?')
-    return
   }
 }
 
@@ -137,7 +130,6 @@ async function sendAsset () {
   const psbt = await syscoinjs.assetAllocationSend(txOpts, assetMap, sysChangeAddress, feeRate)
   if (!psbt) {
     console.log('Could not create transaction, not enough funds?')
-    return
   }
 }
 
@@ -199,7 +191,6 @@ async function assetBurnToSys () {
   const psbt = await syscoinjs.assetAllocationBurn(assetOpts, txOpts, assetMap, sysChangeAddress, feeRate)
   if (!psbt) {
     console.log('Could not create transaction, not enough funds?')
-    return
   }
 }
 
@@ -221,7 +212,6 @@ async function sysBurnToAsset () {
   const psbt = await syscoinjs.syscoinBurnToAssetAllocation(txOpts, assetMap, sysChangeAddress, feeRate)
   if (!psbt) {
     console.log('Could not create transaction, not enough funds?')
-    return
   }
 }
 
@@ -243,7 +233,6 @@ async function assetBurnToEth () {
   const psbt = await syscoinjs.assetAllocationBurn(assetOpts, txOpts, assetMap, sysChangeAddress, feeRate, sysFromXpubOrAddress)
   if (!psbt) {
     console.log('Could not create transaction, not enough funds?')
-    return
   }
 }
 
@@ -276,7 +265,6 @@ async function assetMintToSys () {
   const psbt = await syscoinjs.assetAllocationMint(assetOpts, txOpts, assetMap, sysChangeAddress, feeRate)
   if (!psbt) {
     console.log('Could not create transaction, not enough funds?')
-    return
   }
 }
 
@@ -296,9 +284,7 @@ async function assetMintToSys2 () {
   const psbt = await syscoinjs.assetAllocationMint(assetOpts, txOpts, assetMap, sysChangeAddress, feeRate)
   if (!psbt) {
     console.log('Could not create transaction, not enough funds?')
-    return
   }
 }
-
 
 issueAsset()
