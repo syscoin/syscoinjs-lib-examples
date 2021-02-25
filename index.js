@@ -24,7 +24,7 @@ async function sendSys () {
 async function newAsset () {
   const feeRate = new sjs.utils.BN(10)
   const txOpts = { rbf: false }
-  const assetOpts = { precision: 8, symbol: 'CAT', maxsupply: new sjs.utils.BN(100000000000), description: 'publicvalue' }
+  const assetOpts = { precision: 8, symbol: 'JAG', maxsupply: new sjs.utils.BN(100000000000), description: 'publicvalue' }
   // if SYS need change sent, set this address. null to let HDSigner find a new address for you
   const sysChangeAddress = null
   // let HDSigner find asset destination address
@@ -35,7 +35,7 @@ async function newAsset () {
     return
   }
   const assets = syscointx.getAssetsFromTx(psbt.extractTransaction())
-  console('created asset ' + assets.keys().next().value)
+  console.log('created asset ' + assets.keys().next().value)
 }
 
 async function updateAsset () {
@@ -44,6 +44,61 @@ async function updateAsset () {
   const assetGuid = '2125509931'
   // update capability flags, update description and update eth smart contract address
   const assetOpts = { updatecapabilityflags: 123, contract: Buffer.from('2b1e58b979e4b2d72d8bca5bb4646ccc032ddbfc', 'hex'), description: 'new publicvalue' }
+  // send asset back to ourselves as well as any change
+  const assetChangeAddress = null
+  // send change back to ourselves as well as recipient to ourselves
+  const assetMap = new Map([
+    [assetGuid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(0), address: assetChangeAddress }] }]
+  ])
+  // if SYS need change sent, set this address. null to let HDSigner find a new address for you
+  const sysChangeAddress = null
+  const psbt = await syscoinjs.assetUpdate(assetGuid, assetOpts, txOpts, assetMap, sysChangeAddress, feeRate)
+  if (!psbt) {
+    console.log('Could not create transaction, not enough funds?')
+  }
+}
+async function updateAssetAuxFees () {
+  const feeRate = new sjs.utils.BN(10)
+  const txOpts = { rbf: true }
+  const assetGuid = '2229676993'
+  const scalarPct = 1000
+  // the aux fee keyPair
+  const keyPair = HDSigner.createKeypair(0)
+  // get the p2wpkh payment so we can get the keyid (payment.hash)
+  const payment = sjs.utils.bitcoinjs.payments.p2wpkh({
+    pubkey: keyPair.publicKey,
+    network: HDSigner.network
+  })
+  const auxFeeKeyID = Buffer.from(payment.hash.toString('hex'), 'hex')
+  // setup the auxfee table
+  const auxFees = [
+    {
+      bound: new sjs.utils.BN(0),
+      percent: 1 * scalarPct
+    },
+    {
+      bound: new sjs.utils.BN(10 * syscointx.utils.COIN),
+      percent: 0.4 * scalarPct
+    },
+    {
+      bound: new sjs.utils.BN(250 * syscointx.utils.COIN),
+      percent: 0.2 * scalarPct
+    },
+    {
+      bound: new sjs.utils.BN(2500 * syscointx.utils.COIN),
+      percent: 0.07 * scalarPct
+    },
+    {
+      bound: new sjs.utils.BN(25000 * syscointx.utils.COIN),
+      percent: 0.007 * scalarPct
+    },
+    {
+      bound: new sjs.utils.BN(250000 * syscointx.utils.COIN),
+      percent: 0
+    }
+  ]
+  // update auxfee details
+  const assetOpts = { auxfeedetails: { auxfeekeyid: auxFeeKeyID, auxfees: auxFees } }
   // send asset back to ourselves as well as any change
   const assetChangeAddress = null
   // send change back to ourselves as well as recipient to ourselves
@@ -286,5 +341,5 @@ async function assetMintToSys2 () {
     console.log('Could not create transaction, not enough funds?')
   }
 }
-
-issueAsset()
+console.log('Account XPUB: ' + HDSigner.getAccountXpub())
+updateAssetAuxFees()
