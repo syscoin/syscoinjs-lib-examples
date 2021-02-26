@@ -282,6 +282,8 @@ async function sendAssetWithMemo () {
   if (!psbt) {
     console.log('Could not create transaction, not enough funds?')
   }
+  const memoExtracted = sjs.utils.getMemoFromOpReturn(psbt.txOutputs)
+  console.log('memo extracted from transaction ' + memoExtracted.toString('hex'))
 }
 
 async function assetBurnToSys () {
