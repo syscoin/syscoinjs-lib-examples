@@ -13,14 +13,30 @@ async function sendSys () {
   // if SYS need change sent, set this address. null to let HDSigner find a new address for you
   const sysChangeAddress = null
   const outputsArr = [
-    { address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae', value: new sjs.utils.BN(100000000) }
+    { address: 'tsys1quas925cuqmlkc0082442uh68efv3hdazknmjpd', value: new sjs.utils.BN(100000000) }
   ]
   const psbt = await syscoinjs.createTransaction(txOpts, sysChangeAddress, outputsArr, feeRate)
   if (!psbt) {
     console.log('Could not create transaction, not enough funds?')
   }
 }
-
+async function sendSysMemo () {
+  const feeRate = new sjs.utils.BN(10)
+  const memo = Buffer.from('my memo')
+  const memoHeader = Buffer.from([0xfe, 0xfe, 0xaf, 0xaf, 0xaf, 0xaf])
+  const txOpts = { rbf: true, memo: memo, memoHeader: memoHeader }
+  // if SYS need change sent, set this address. null to let HDSigner find a new address for you
+  const sysChangeAddress = null
+  const outputsArr = [
+    { address: 'tsys1quas925cuqmlkc0082442uh68efv3hdazknmjpd', value: new sjs.utils.BN(10000) }
+  ]
+  const psbt = await syscoinjs.createTransaction(txOpts, sysChangeAddress, outputsArr, feeRate)
+  if (!psbt) {
+    console.log('Could not create transaction, not enough funds?')
+  }
+  const memoExtracted = sjs.utils.getMemoFromOpReturn(psbt.txOutputs, memoHeader)
+  console.log('memo extracted from transaction ' + memoExtracted.toString())
+}
 async function newAsset () {
   const feeRate = new sjs.utils.BN(10)
   const txOpts = { rbf: false }
@@ -171,12 +187,12 @@ async function transferAsset () {
 async function issueAsset () {
   const feeRate = new sjs.utils.BN(10)
   const txOpts = { rbf: true }
-  const assetGuid = '2264781424'
+  const assetGuid = '3813460941'
   // mint 11000 satoshi (not COINS)
   // if assets need change sent, set this address. null to let HDSigner find a new address for you
   const assetChangeAddress = null
   const assetMap = new Map([
-    [assetGuid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(11000), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
+    [assetGuid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(6000), address: 'tsys1qpay7ehn7epk5dmh8xv7dn5ksvyhr06323mtz0s' }] }]
   ])
   // if SYS need change sent, set this address. null to let HDSigner find a new address for you
   const sysChangeAddress = null
@@ -209,12 +225,12 @@ async function issueAssetNFT () {
 async function sendAsset () {
   const feeRate = new sjs.utils.BN(10)
   // set to false for ZDAG, true disables it but it is replaceable by bumping the fee
-  const txOpts = { rbf: true }
-  const assetguid = '2102391361'
+  const txOpts = { rbf: false }
+  const assetguid = '373026335'
   // if assets need change sent, set this address. null to let HDSigner find a new address for you
   const assetChangeAddress = null
   const assetMap = new Map([
-    [assetguid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(100000000), address: 'tsys1qk0mrytgd06tc4rdtcs7h6nvx9ph67rjavv7qx6' }] }]
+    [assetguid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(100000000), address: 'tsys1qgp037yuv93pkwfwj8kmez2z2ncypa40fksd0nh' }] }]
   ])
   // if SYS need change sent, set this address. null to let HDSigner find a new address for you
   const sysChangeAddress = null
@@ -268,8 +284,9 @@ async function sendAssetWithMemo () {
   const feeRate = new sjs.utils.BN(10)
   // data carrying memo field added to opreturn commitment
   const memo = Buffer.from('a7bf215279d3f6568dcd17c429d41a35a466f803', 'hex')
+  const memoHeader = Buffer.from([0xfe, 0xfe, 0xaf, 0xaf, 0xaf, 0xaf])
   // set to false for ZDAG, true disables it but it is replaceable by bumping the fee
-  const txOpts = { rbf: true, memo: memo }
+  const txOpts = { rbf: true, memo: memo, memoHeader: memoHeader }
   const assetguid = '855502674'
   // if assets need change sent, set this address. null to let HDSigner find a new address for you
   const assetChangeAddress = null
@@ -282,7 +299,7 @@ async function sendAssetWithMemo () {
   if (!psbt) {
     console.log('Could not create transaction, not enough funds?')
   }
-  const memoExtracted = sjs.utils.getMemoFromOpReturn(psbt.txOutputs)
+  const memoExtracted = sjs.utils.getMemoFromOpReturn(psbt.txOutputs, memoHeader)
   console.log('memo extracted from transaction ' + memoExtracted.toString('hex'))
 }
 
@@ -400,4 +417,4 @@ async function assetMintToSys2 () {
   }
 }
 console.log('Account XPUB: ' + HDSigner.getAccountXpub())
-newAsset()
+sendSys()
