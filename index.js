@@ -1,5 +1,5 @@
 const sjs = require('syscoinjs-lib')
-const mnemonic = 'club toss element melody skin ship rifle student reason real interest insane elevator beauty movie'
+const mnemonic = 'air leader stone antenna first shrug panic before nut sport bench keen'
 // blockbook URL
 const backendURL = 'https://sys-explorer.tk/' // if using localhost you don't need SSL see use 'systemctl edit --full blockbook-syscoin.service' to remove SSL from blockbook
 // 'null' for no password encryption for local storage and 'true' for testnet
@@ -13,7 +13,7 @@ async function sendSys () {
   // if SYS need change sent, set this address. null to let HDSigner find a new address for you
   const sysChangeAddress = null
   const outputsArr = [
-    { address: 'tsys1quas925cuqmlkc0082442uh68efv3hdazknmjpd', value: new sjs.utils.BN(100000000) }
+    { address: 'tsys1quas925cuqmlkc0082442uh68efv3hdazknmjpd', value: new sjs.utils.BN(10000000) }
   ]
   const psbt = await syscoinjs.createTransaction(txOpts, sysChangeAddress, outputsArr, feeRate)
   if (!psbt) {
@@ -39,7 +39,7 @@ async function sendSysMemo () {
 }
 async function newAsset () {
   const feeRate = new sjs.utils.BN(10)
-  const txOpts = { rbf: false }
+  const txOpts = { rbf: false, allowOtherNotarizedAssetInputs: true }
   const assetOpts = { precision: 8, symbol: 'JAG', maxsupply: new sjs.utils.BN(100000000000), description: 'publicvalue' }
   // if SYS need change sent, set this address. null to let HDSigner find a new address for you
   const sysChangeAddress = null
@@ -222,15 +222,34 @@ async function issueAssetNFT () {
   }
 }
 
+async function issueAssetNFT1 () {
+  const feeRate = new sjs.utils.BN(10)
+  const txOpts = { rbf: true }
+  const assetGuid = '2441957158'
+  const NFTID = sjs.utils.createAssetID('1', assetGuid)
+  // mint 1000 satoshi (not COINS)
+  // if assets need change sent, set this address. null to let HDSigner find a new address for you
+  const assetChangeAddress = null
+  const assetMap = new Map([
+    [NFTID, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(1), address: 'tsys1qdflre2yd37qtpqe2ykuhwandlhq04r2td2t9ae' }] }]
+  ])
+  // if SYS need change sent, set this address. null to let HDSigner find a new address for you
+  const sysChangeAddress = null
+  const psbt = await syscoinjs.assetSend(txOpts, assetMap, sysChangeAddress, feeRate)
+  if (!psbt) {
+    console.log('Could not create transaction, not enough funds?')
+  }
+}
+
 async function sendAsset () {
   const feeRate = new sjs.utils.BN(10)
   // set to false for ZDAG, true disables it but it is replaceable by bumping the fee
   const txOpts = { rbf: false }
-  const assetguid = '373026335'
+  const assetguid = '341906151'
   // if assets need change sent, set this address. null to let HDSigner find a new address for you
   const assetChangeAddress = null
   const assetMap = new Map([
-    [assetguid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(100000000), address: 'tsys1qgp037yuv93pkwfwj8kmez2z2ncypa40fksd0nh' }] }]
+    [assetguid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(100000000), address: 'tsys1q0hxdj9r3tyxmr66tehdhhl35l5rk4ucanteuh6' }] }]
   ])
   // if SYS need change sent, set this address. null to let HDSigner find a new address for you
   const sysChangeAddress = null
@@ -417,4 +436,4 @@ async function assetMintToSys2 () {
   }
 }
 console.log('Account XPUB: ' + HDSigner.getAccountXpub())
-sendSys()
+issueAssetNFT1()
