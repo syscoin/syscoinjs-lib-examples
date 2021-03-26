@@ -24,11 +24,11 @@ async function sendSysMemo () {
   const feeRate = new sjs.utils.BN(10)
   const memo = Buffer.from('my memo')
   const memoHeader = Buffer.from([0xfe, 0xfe, 0xaf, 0xaf, 0xaf, 0xaf])
-  const txOpts = { rbf: true, memo: memo, memoHeader: memoHeader }
+  const txOpts = { rbf: true, memo: memo, memoHeader: memoHeader, allowOtherNotarizedAssetInputs: true }
   // if SYS need change sent, set this address. null to let HDSigner find a new address for you
   const sysChangeAddress = null
   const outputsArr = [
-    { address: 'tsys1quas925cuqmlkc0082442uh68efv3hdazknmjpd', value: new sjs.utils.BN(10000) }
+    { address: 'tsys1quas925cuqmlkc0082442uh68efv3hdazknmjpd', value: new sjs.utils.BN(100000000) }
   ]
   const psbt = await syscoinjs.createTransaction(txOpts, sysChangeAddress, outputsArr, feeRate)
   if (!psbt) {
@@ -249,7 +249,7 @@ async function sendAsset () {
   // if assets need change sent, set this address. null to let HDSigner find a new address for you
   const assetChangeAddress = null
   const assetMap = new Map([
-    [assetguid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(100000000), address: 'tsys1q0hxdj9r3tyxmr66tehdhhl35l5rk4ucanteuh6' }] }]
+    [assetguid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(100000000), address: 'tsys1qv2nl49aylg0afk8tpssuve5afumj9nxprjlvkl' }] }]
   ])
   // if SYS need change sent, set this address. null to let HDSigner find a new address for you
   const sysChangeAddress = null
@@ -306,7 +306,7 @@ async function sendAssetWithMemo () {
   const memoHeader = Buffer.from([0xfe, 0xfe, 0xaf, 0xaf, 0xaf, 0xaf])
   // set to false for ZDAG, true disables it but it is replaceable by bumping the fee
   const txOpts = { rbf: true, memo: memo, memoHeader: memoHeader }
-  const assetguid = '855502674'
+  const assetguid = '341906151'
   // if assets need change sent, set this address. null to let HDSigner find a new address for you
   const assetChangeAddress = null
   const assetMap = new Map([
@@ -436,4 +436,4 @@ async function assetMintToSys2 () {
   }
 }
 console.log('Account XPUB: ' + HDSigner.getAccountXpub())
-issueAssetNFT1()
+sendSysMemo()
