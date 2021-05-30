@@ -40,7 +40,7 @@
     "standard": "*"
   },
   "dependencies": {
-    "syscoinjs-lib": "^1.0.129",
-    "syscointx-js": "^1.0.87"
+    "syscoinjs-lib": "^1.0.141",
+    "syscointx-js": "^1.0.89"
   }
 }

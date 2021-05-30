@@ -34,7 +34,7 @@ async function sendSysMemo () {
   if (!result) {
     console.log('Could not create transaction, not enough funds?')
   }
-  const psbt = await syscoinjs.signAndSendWithWIF(result.res, 'cQh85hzaUMQDCneQvuwEvKFS418gzHfaQ9MmKj9pCd8aKgRNaEDr', result.assets)
+  const psbt = await syscoinjs.signAndSendWithWIF(result.psbt, 'cQh85hzaUMQDCneQvuwEvKFS418gzHfaQ9MmKj9pCd8aKgRNaEDr', result.assets)
   const memoExtracted = sjs.utils.getMemoFromOpReturn(psbt.txOutputs, memoHeader)
   console.log('memo extracted from transaction ' + memoExtracted.toString())
 }
@@ -246,11 +246,11 @@ async function sendAsset () {
   const feeRate = new sjs.utils.BN(10)
   // set to false for ZDAG, true disables it but it is replaceable by bumping the fee
   const txOpts = { rbf: false }
-  const assetguid = '341906151'
+  const assetguid = '3813460941'
   // if assets need change sent, set this address. null to let HDSigner find a new address for you
   const assetChangeAddress = null
   const assetMap = new Map([
-    [assetguid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(100000000), address: 'tsys1qv2nl49aylg0afk8tpssuve5afumj9nxprjlvkl' }] }]
+    [assetguid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(500), address: 'tsys1qgkyez6kz2l2qkr5zmjmwx0rwkrkylf2p09lyd4' }] }]
   ])
   // if SYS need change sent, set this address. null to let HDSigner find a new address for you
   const sysChangeAddress = null
@@ -264,11 +264,11 @@ async function sendAssetFundedByAddress () {
   const feeRate = new sjs.utils.BN(10)
   // set to false for ZDAG, true disables it but it is replaceable by bumping the fee
   const txOpts = { rbf: true }
-  const assetguid = '2102391361'
+  const assetguid = '2201781193'
   // if assets need change sent, set this address. null to let HDSigner find a new address for you
   const assetChangeAddress = null
   const assetMap = new Map([
-    [assetguid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(100000000), address: 'tsys1qk0mrytgd06tc4rdtcs7h6nvx9ph67rjavv7qx6' }] }]
+    [assetguid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(1000000), address: 'tsys1qk0mrytgd06tc4rdtcs7h6nvx9ph67rjavv7qx6' }] }]
   ])
   // if SYS need change sent, set this address. null to let HDSigner find a new address for you
   const sysChangeAddress = null
@@ -284,22 +284,49 @@ async function sendAssetFundedByXPUB () {
   const feeRate = new sjs.utils.BN(10)
   // set to false for ZDAG, true disables it but it is replaceable by bumping the fee
   const txOpts = { rbf: true }
-  const assetguid = '2102391361'
+  const assetguid = '341906151'
   // if assets need change sent, set this address. null to let HDSigner find a new address for you
   const assetChangeAddress = null
   const assetMap = new Map([
-    [assetguid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(100000000), address: 'tsys1qk0mrytgd06tc4rdtcs7h6nvx9ph67rjavv7qx6' }] }]
+    [assetguid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(100000), address: 'tsys1qk0mrytgd06tc4rdtcs7h6nvx9ph67rjavv7qx6' }] }]
   ])
   // if SYS need change sent, set this address. null to let HDSigner find a new address for you
   const sysChangeAddress = null
-  const result = await syscoinjs.assetAllocationSend(txOpts, assetMap, sysChangeAddress, feeRate, 'vpub5YRAiaSdofukzKaR3uMCnPxL41yFFJpDsr9jn93FXFVZkJWx2sedirtJHeWvJRVoisYJuDqVp8r9Z1fuAS33oekzgZe5U3sg2ENWe8Dtb2G')
+  const result = await syscoinjs.assetAllocationSend(txOpts, assetMap, sysChangeAddress, feeRate, 'vpub5ZnEznWQvUgz3caxxZVnfnxkHkDstTFrsdSi9zQAf48ozc4a1XdfaAY6eBgKigm4NxykfcFh7d3oBwMHqKzzGo2jKET8AbypuuffvbBwAwH')
   if (!result) {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  await syscoinjs.signAndSendWithHDSigner(result.res, HDSigner, result.assets)
+  await syscoinjs.signAndSend(result.res, result.assets)
 }
 
+async function sendAssetFundedByMultiHDSigners () {
+  const mnemonic1 = 'bicycle lucky earn primary wasp ranch dinner gravity property tenant gospel nephew soul cruise tool'
+  const HDSigner1 = new sjs.utils.HDSigner(mnemonic1, null, true)
+  const feeRate = new sjs.utils.BN(10)
+  // set to false for ZDAG, true disables it but it is replaceable by bumping the fee
+  const txOpts = { rbf: true }
+  const assetguid = '3813460941'
+  // if assets need change sent, set this address. null to let HDSigner find a new address for you
+  const assetChangeAddress = null
+  const assetMap = new Map([
+    [assetguid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(6000), address: 'tsys1qfqq6fg6jacruta85xysa4hzc00y9c0numedhh8' }] }]
+  ])
+  // if SYS need change sent, set this address. null to let HDSigner find a new address for you
+  const sysChangeAddress = null
+  const sysFromXpubOrAddress = [HDSigner.getAccountXpub(), HDSigner1.getAccountXpub()]
+  const result = await syscoinjs.assetAllocationSend(txOpts, assetMap, sysChangeAddress, feeRate, sysFromXpubOrAddress)
+  if (!result) {
+    console.log('Could not create transaction, not enough funds?')
+    return
+  }
+  // this should sign one of the inputs with HDSigner
+  let psbt = await syscoinjs.signAndSend(result.psbt, result.assets)
+  // this should sign the other input with HDSigner1, and then notarize, signing one input with HDSigner1 again
+  const psbt1 = await syscoinjs.signAndSend(psbt, result.assets, HDSigner1)
+  // this should finalize the transaction from HDSigner signing (this time notarized) and send it to network
+  psbt = await syscoinjs.signAndSend(psbt1, result.assets)
+}
 async function sendAssetWithMemo () {
   const feeRate = new sjs.utils.BN(10)
   // data carrying memo field added to opreturn commitment
@@ -437,4 +464,4 @@ async function assetMintToSys2 () {
   }
 }
 console.log('Account XPUB: ' + HDSigner.getAccountXpub())
-sendSysMemo()
+sendAssetFundedByMultiHDSigners()
