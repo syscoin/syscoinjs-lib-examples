@@ -60,7 +60,7 @@ async function updateAsset () {
   const txOpts = { rbf: true }
   const assetGuid = '2125509931'
   // update capability flags, update description and update eth smart contract address
-  const assetOpts = { updatecapabilityflags: 123, contract: Buffer.from('2b1e58b979e4b2d72d8bca5bb4646ccc032ddbfc', 'hex'), description: 'new publicvalue' }
+  const assetOpts = { updatecapabilityflags: '123', contract: Buffer.from('2b1e58b979e4b2d72d8bca5bb4646ccc032ddbfc', 'hex'), description: 'new publicvalue' }
   // send asset back to ourselves as well as any change
   const assetChangeAddress = null
   // send change back to ourselves as well as recipient to ourselves
