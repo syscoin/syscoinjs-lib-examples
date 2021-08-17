@@ -84,7 +84,7 @@ async function updateAssetAuxFees () {
   // get the p2wpkh payment so we can get the keyid (payment.hash)
   const payment = sjs.utils.bitcoinjs.payments.p2wpkh({
     pubkey: keyPair.publicKey,
-    network: HDSigner.network
+    network: HDSigner.Signer.network
   })
   const auxFeeKeyID = Buffer.from(payment.hash.toString('hex'), 'hex')
   // setup the auxfee table
@@ -139,7 +139,7 @@ async function updateAssetNotary () {
   // get the p2wpkh payment so we can get the keyid (payment.hash)
   const payment = sjs.utils.bitcoinjs.payments.p2wpkh({
     pubkey: keyPair.publicKey,
-    network: HDSigner.network
+    network: HDSigner.Signer.network
   })
   // the notary key and the details can be updated independently but we will update both here
   const notaryKeyID = Buffer.from(payment.hash.toString('hex'), 'hex')
@@ -260,6 +260,29 @@ async function sendAsset () {
   }
 }
 
+async function sendAssetWithoutSigner () {
+  const feeRate = new sjs.utils.BN(10)
+  // set to false for ZDAG, true disables it but it is replaceable by bumping the fee
+  const txOpts = { rbf: true }
+  const assetguid = '682797033'
+  // if assets need change sent, set this address. null to let HDSigner find a new address for you
+  const assetChangeAddress = 'tsys1qma37l03q036525653n5m66yun3m7kkjxdm42jk'
+  const assetMap = new Map([
+    [assetguid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(0.0001*10**8), address: 'tsys1q4nla8xg9e7ww8zafwkxdwkwl8dxmn78nz4dcc7' }] }]
+  ])
+  const xpub = 'vpub5YBbnk2FsQPCd4LsK7rESWaGVeWtq7nr3SgrdbeaQgctXBwpFQfLbKdwtDAkxLwhKubbpNwQqKPodfKTwVc4uN8jbsknuPTpJuW8aN1S3nC'
+  // if SYS need change sent, set this address. null to let HDSigner find a new address for you
+  const sysChangeAddress = 'tsys1qma37l03q036525653n5m66yun3m7kkjxdm42jk'
+  const result = await syscoinjs.assetAllocationSend(txOpts, assetMap, sysChangeAddress, feeRate, xpub)
+  console.log('base64 psbt ' + result.psbt.toBase64())
+  if (!result) {
+    console.log('Could not create transaction, not enough funds?')
+  }
+  const newpbst = sjs.utils.bitcoinjs.Psbt.fromBase64( result.psbt.toBase64())
+  console.log('base64 psbt new ' + newpbst.toBase64())
+  console.log('base64 psbt new ' + JSON.stringify(newpbst))
+}
+
 async function sendAssetFundedByAddress () {
   const feeRate = new sjs.utils.BN(10)
   // set to false for ZDAG, true disables it but it is replaceable by bumping the fee
@@ -326,6 +349,68 @@ async function sendAssetFundedByMultiHDSigners () {
   const psbt1 = await syscoinjs.signAndSend(psbt, result.assets, HDSigner1)
   // this should finalize the transaction from HDSigner signing (this time notarized) and send it to network
   psbt = await syscoinjs.signAndSend(psbt1, result.assets)
+}
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}  
+async function sendAssetFundedByMultisig() {
+  const mnemonic1 = 'bicycle lucky earn primary wasp ranch dinner gravity property tenant gospel nephew soul cruise tool'
+  const HDSigner1 = new sjs.utils.HDSigner(mnemonic1, null, true)
+  hdSignerKP = await HDSigner.createKeypair(0, false)
+  hdSigner1KP = await HDSigner1.createKeypair(0, false)
+  const p2ms = sjs.utils.bitcoinjs.payments.p2ms({
+    m: 2, pubkeys: [
+      hdSignerKP.publicKey,
+      hdSigner1KP.publicKey,
+    ], network: HDSigner.Signer.network})
+  const addressMS = sjs.utils.bitcoinjs.payments.p2wsh({
+    redeem: p2ms
+  })
+  // if SYS need change sent, set this address. null to let HDSigner find a new address for you
+  const sysChangeAddress = null
+  const feeRate = new sjs.utils.BN(10)
+  const txOpts = { rbf: true }
+  // send some gas to the multisig
+  const outputsArr = [
+    { address: addressMS.address, value: new sjs.utils.BN(10000000) }
+  ]
+  const assetguid = '341906151'
+  // if assets need change sent, set this address. null to let HDSigner find a new address for you
+  const assetChangeAddress = null
+  let psbt = await syscoinjs.createTransaction(txOpts, sysChangeAddress, outputsArr, feeRate)
+  if (!psbt) {
+    console.log('Could not create transaction, not enough funds?')
+  }
+  
+  // send some asset to the multisig
+  let assetMap = new Map([
+    [assetguid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(6000), address: addressMS.address }] }]
+  ])
+  let result = await syscoinjs.assetAllocationSend(txOpts, assetMap, sysChangeAddress, feeRate)
+  if (!result) {
+    console.log('Could not create transaction, not enough funds?')
+    return
+  }
+  console.log('Waiting for 10 seconds so we can spend the multisig(wait for 1 block)...')
+  await sleep(10000);
+  // now spend the asset from the multisig
+  assetMap = new Map([
+    [assetguid, { changeAddress: assetChangeAddress, outputs: [{ value: new sjs.utils.BN(5000), address: 'tsys1qk0mrytgd06tc4rdtcs7h6nvx9ph67rjavv7qx6' }] }]
+  ])
+  const sysFromXpubOrAddress = [addressMS.address]
+  result = await syscoinjs.assetAllocationSend(txOpts, assetMap, sysChangeAddress, feeRate, sysFromXpubOrAddress, null, p2ms.output)
+  if (!result) {
+    console.log('Could not create transaction, not enough funds?')
+    return
+  }
+  // this should add signature with hdSignerKP
+  psbt = await syscoinjs.signAndSendWithWIF(result.psbt, hdSignerKP.toWIF(), result.assets)
+  // this should add second signature with hdSigner1KP and send to network
+  await syscoinjs.signAndSendWithWIF(psbt, hdSigner1KP.toWIF(), result.assets)
+
+
 }
 async function sendAssetWithMemo () {
   const feeRate = new sjs.utils.BN(10)
@@ -464,4 +549,4 @@ async function assetMintToSys2 () {
   }
 }
 console.log('Account XPUB: ' + HDSigner.getAccountXpub())
-sendAssetFundedByMultiHDSigners()
+sendAssetFundedByMultisig()
