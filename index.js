@@ -405,10 +405,10 @@ async function sendAssetFundedByMultisig() {
     console.log('Could not create transaction, not enough funds?')
     return
   }
-  // this should add signature with hdSignerKP
-  psbt = await syscoinjs.signAndSendWithWIF(result.psbt, hdSignerKP.toWIF(), result.assets)
-  // this should add second signature with hdSigner1KP and send to network
-  await syscoinjs.signAndSendWithWIF(psbt, hdSigner1KP.toWIF(), result.assets)
+  // this should add signature with 0th index path in HDSigner
+  psbt = await syscoinjs.signAndSend(result.psbt, result.assets, null, HDSigner.getHDPath(0, false))
+  // this should add second signature with 0th index path in HDSigner1
+  await syscoinjs.signAndSend(psbt, result.assets, HDSigner1, HDSigner1.getHDPath(0, false))
 
 
 }
