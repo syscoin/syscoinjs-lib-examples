@@ -358,8 +358,12 @@ function sleep(ms) {
 async function sendAssetFundedByMultisig() {
   const mnemonic1 = 'bicycle lucky earn primary wasp ranch dinner gravity property tenant gospel nephew soul cruise tool'
   const HDSigner1 = new sjs.utils.HDSigner(mnemonic1, null, true)
-  hdSignerKP = await HDSigner.createKeypair(0, false)
-  hdSigner1KP = await HDSigner1.createKeypair(0, false)
+  // create key pair of the current receiving index and get its path right after that to pass in to signing
+  // you can also pass in an index into this function to create a specific receiving index key and then also pass it in to getHDPath to get its path as well
+  hdSignerKP = await HDSigner.createKeypair()
+  const hdSignerPath = HDSigner.getHDPath()
+  hdSigner1KP = await HDSigner1.createKeypair()
+  const hdSignerPath1 = HDSigner1.getHDPath()
   const p2ms = sjs.utils.bitcoinjs.payments.p2ms({
     m: 2, pubkeys: [
       hdSignerKP.publicKey,
@@ -406,9 +410,9 @@ async function sendAssetFundedByMultisig() {
     return
   }
   // this should add signature with 0th index path in HDSigner
-  psbt = await syscoinjs.signAndSend(result.psbt, result.assets, null, HDSigner.getHDPath(0, false))
+  psbt = await syscoinjs.signAndSend(result.psbt, result.assets, null, hdSignerPath)
   // this should add second signature with 0th index path in HDSigner1
-  await syscoinjs.signAndSend(psbt, result.assets, HDSigner1, HDSigner1.getHDPath(0, false))
+  await syscoinjs.signAndSend(psbt, result.assets, HDSigner1, hdSignerPath1)
 
 
 }
@@ -549,4 +553,4 @@ async function assetMintToSys2 () {
   }
 }
 console.log('Account XPUB: ' + HDSigner.getAccountXpub())
-sendAssetFundedByMultisig()
+sysBurnToAsset()
